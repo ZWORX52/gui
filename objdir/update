@@ -1,0 +1,17 @@
+commit () {
+	# Request a commit message and give it to git
+	set -o noclobber
+	echo -n "Please enter a commit message: "
+	read MESSAGE
+	[[ ${#MESSAGE} -gt 72 ]] && { echo Message too long! Sorry; unset MESSAGE; exit 1; }
+	git commit -m "$MESSAGE" --allow-empty-message
+	unset MESSAGE
+	set +o noclobber
+}
+
+$HOME/code/rezip
+git add $HOME/code/
+commit
+git push -u origin master
+echo Updating done!
+

@@ -1,0 +1,14 @@
+Origins docs: https://origins.readthedocs.io/en/latest/
+Origins download (Fabric MC mod): https://www.curseforge.com/minecraft/mc-mods/origins
+
+GUI:
+C++
+Java?
+
+Actual file generation:
+Python
+C? Nah, straight C + strings = pain
+Lua? Maybe, no experience in Lua though
+
+Communication between GUI lang and file gen lang:
+Probably file of simpler syntax so Python can read it and convert it to JSON
