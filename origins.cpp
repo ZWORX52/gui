@@ -32,10 +32,10 @@ void Origins::UpdateWindow(bool *open) {
 
 	if (ImGui::BeginMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
-			ImGui::MenuItem("Open...", &show_load_window);
-			ImGui::MenuItem("Save...", &show_save_window);
-			ImGui::MenuItem("Save as...", &show_save_as_window);
-			ImGui::MenuItem("New...", &show_new_window);
+			ImGui::MenuItem("Open...", NULL, &show_load_window);
+			ImGui::MenuItem("Save...", NULL, &show_save_window);
+			ImGui::MenuItem("Save as...", NULL, &show_save_as_window);
+			ImGui::MenuItem("New...", NULL, &show_new_window);
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();

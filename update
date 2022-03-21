@@ -9,8 +9,8 @@ commit () {
 	set +o noclobber
 }
 
-$HOME/code/rezip
-git add $HOME/code/
+$HOME/gui/rezip
+git add $HOME/gui/
 commit
 git push -u origin master
 echo Updating done!

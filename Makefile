@@ -16,7 +16,7 @@
 
 EXE = main
 OBJDIR = objdir/
-IMGUI_DIR = /home/zworx52/code/resources/imgui-1.87
+IMGUI_DIR = /home/zworx52/imgui
 SOURCES = main.cpp encrypt.cpp utils.cpp origins.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
