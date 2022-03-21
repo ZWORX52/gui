@@ -92,287 +92,342 @@ enum PowerType {
 	PowerType_Toggle			= 45, // TODO
 	PowerType_Tooltip			= 46, // TODO
 	PowerType_WalkOnFluid			= 47, // TODO
-	// Action-related
-	PowerType_ActionOnBeingUsed		= 48, // TODO
-	PowerType_ActionOnBlockBreak		= 49, // TODO
-	PowerType_ActionOnBlockUse		= 50, // TODO
-	PowerType_ActionOnCallback		= 51, // TODO
-	PowerType_ActionOnEntityUse		= 52, // TODO
-	PowerType_ActionOnHit			= 53, // TODO
-	PowerType_ActionOnItemUse		= 54, // TODO
-	PowerType_ActionOnLand			= 55, // TODO
-	PowerType_ActionOnWakeUp		= 56, // TODO
-	PowerType_ActionOverTime		= 57, // TODO
-	PowerType_ActionWhenDamageTaken		= 58, // TODO
-	PowerType_ActionWhenHit			= 59, // TODO
-	PowerType_ActiveSelf			= 60, // TODO
-	PowerType_AttackerActionWhenHit		= 61, // TODO
-	PowerType_SelfActionOnHit		= 62, // TODO
-	PowerType_SelfActionOnKill		= 63, // TODO
-	PowerType_SelfActionWhenHit		= 64, // TODO
-	PowerType_TargetActionOnHit		= 65, // TODO
-	// Modifying types
-	PowerType_ModifyAirSpeed		= 66, // TODO
-	PowerType_ModifyBlockRender		= 67, // TODO
-	PowerType_ModifyBreakSpeed		= 68, // TODO
-	PowerType_ModifyCameraSubmersion	= 69, // TODO
-	PowerType_ModifyCrafting		= 70, // TODO
-	PowerType_ModifyDamageDealt		= 71, // TODO
-	PowerType_ModifyDamageTaken		= 72, // TODO
-	PowerType_ModifyExhaustion		= 73, // TODO
-	PowerType_ModifyFalling			= 74, // TODO
-	PowerType_ModifyFluidRender		= 75, // TODO
-	PowerType_ModifyFood			= 76, // TODO
-	PowerType_ModifyHarvest			= 77, // TODO
-	PowerType_ModifyJump			= 78, // TODO
-	PowerType_ModifyLavaSpeed		= 79, // TODO
-	PowerType_ModifyPlayerSpawn		= 80, // TODO
-	PowerType_ModifyProjectileDamage	= 81, // TODO
-	PowerType_ModifySlipperiness		= 82, // TODO
-	PowerType_ModifyStatusEffectAmplifier	= 83, // TODO
-	PowerType_ModifyStatusEffectDuration	= 84, // TODO
-	PowerType_ModifySwimSpeed		= 85, // TODO
-	PowerType_ModifyXPGain			= 86, // TODO
-	// Preventing types
-	PowerType_PreventBeingUsed		= 87, // TODO
-	PowerType_PreventBlockSelection		= 88, // TODO
-	PowerType_PreventBlockUse		= 89, // TODO
-	PowerType_PreventDeath			= 90, // TODO
-	PowerType_PreventElytraFlight		= 91, // TODO
-	PowerType_PreventElytraCollision	= 92, // TODO
-	PowerType_PreventEntityRender		= 93, // TODO
-	PowerType_PreventEntityUse		= 94, // TODO
-	PowerType_PreventFeatureRender		= 95, // TODO
-	PowerType_PreventGameEvent		= 96, // TODO
-	PowerType_PreventItemUse		= 97, // TODO
-	PowerType_PreventSleep			= 98  // TODO
 };
 
-enum ActionType {
-	ActionType_None				= 0,
-	// I determine on a case-to-case basis which one has a longer name due to
-	// expected usage
+enum ActionPowerType {
+	ActionPowerType_None			= 0,
+	// Action-related
+	PowerType_ActionOnBeingUsed		= 1,  // TODO
+	PowerType_ActionOnBlockBreak		= 2,  // TODO
+	PowerType_ActionOnBlockUse		= 3,  // TODO
+	PowerType_ActionOnCallback		= 4,  // TODO
+	PowerType_ActionOnEntityUse		= 5,  // TODO
+	PowerType_ActionOnHit			= 6,  // TODO
+	PowerType_ActionOnItemUse		= 7,  // TODO
+	PowerType_ActionOnLand			= 8,  // TODO
+	PowerType_ActionOnWakeUp		= 9,  // TODO
+	PowerType_ActionOverTime		= 10, // TODO
+	PowerType_ActionWhenDamageTaken		= 11, // TODO
+	PowerType_ActionWhenHit			= 12, // TODO
+	PowerType_ActiveSelf			= 13, // TODO
+	PowerType_AttackerActionWhenHit		= 14, // TODO
+	PowerType_SelfActionOnHit		= 15, // TODO
+	PowerType_SelfActionOnKill		= 16, // TODO
+	PowerType_SelfActionWhenHit		= 17, // TODO
+	PowerType_TargetActionOnHit		= 18  // TODO
+};
+
+enum ModifyPowerType {
+	ModifyPowerType_None			= 0,
+	// Modifying types
+	ModifyowerType_AirSpeed			= 1,  // TODO
+	ModifyowerType_BlockRender		= 2,  // TODO
+	ModifyowerType_BreakSpeed		= 3,  // TODO
+	ModifyowerType_CameraSubmersion		= 4,  // TODO
+	ModifyowerType_Crafting			= 5,  // TODO
+	ModifyowerType_DamageDealt		= 6,  // TODO
+	ModifyowerType_DamageTaken		= 7,  // TODO
+	ModifyowerType_Exhaustion		= 8,  // TODO
+	ModifyowerType_Falling			= 9,  // TODO
+	ModifyowerType_FluidRender		= 10, // TODO
+	ModifyowerType_Food			= 11, // TODO
+	ModifyowerType_Harvest			= 12, // TODO
+	ModifyowerType_Jump			= 13, // TODO
+	ModifyowerType_LavaSpeed		= 14, // TODO
+	ModifyowerType_PlayerSpawn		= 15, // TODO
+	ModifyowerType_ProjectileDamage		= 16, // TODO
+	ModifyowerType_Slipperiness		= 17, // TODO
+	ModifyowerType_StatusEffectAmplifier	= 18, // TODO
+	ModifyowerType_StatusEffectDuration	= 19, // TODO
+	ModifyowerType_SwimSpeed		= 20, // TODO
+	ModifyowerType_XPGain			= 21  // TODO
+};
+
+enum PreventPowerType {
+	PreventPowerType_None			= 0,
+	// Preventing types
+	PreventPowerType_BeingUsed		= 1,  // TODO
+	PreventPowerType_BlockSelection		= 2,  // TODO
+	PreventPowerType_BlockUse		= 3,  // TODO
+	PreventPowerType_Death			= 4,  // TODO
+	PreventPowerType_ElytraFlight		= 5,  // TODO
+	PreventPowerType_ElytraCollision	= 6,  // TODO
+	PreventPowerType_EntityRender		= 7,  // TODO
+	PreventPowerType_EntityUse		= 8,  // TODO
+	PreventPowerType_FeatureRender		= 9,  // TODO
+	PreventPowerType_GameEvent		= 10, // TODO
+	PreventPowerType_ItemUse		= 11, // TODO
+	PreventPowerType_Sleep			= 12  // TODO
+};
+
+enum BiEntityActionType {
+	BiEntityActionType_None			= 0,
 	// https://origins.readthedocs.io/en/latest/types/bientity_action_types/
 	// Bi-entity
-	ActionType_BiEntityAddVelocity		= 1,  // TODO
-	ActionType_BiEntityDamage		= 2,  // TODO
-	ActionType_Mount			= 3,  // TODO
-	ActionType_SetInLove			= 4,  // TODO
-	ActionType_Tame				= 5,  // TODO
+	BiEntityActionType_AddVelocity		= 1,  // TODO
+	BiEntityActionType_Damage		= 2,  // TODO
+	BiEntityActionType_Mount		= 3,  // TODO
+	BiEntityActionType_SetInLove		= 4,  // TODO
+	BiEntityActionType_Tame			= 5,  // TODO
 	// Bi-entity meta
-	ActionType_ActorAction			= 6,  // TODO
-	ActionType_Invert			= 7,  // TODO
-	ActionType_TargetAction			= 8,  // TODO
-	// https://origins.readthedocs.io/en/latest/types/block_action_types/
-	// Block
-	ActionType_AddBlock			= 9,  // TODO
-	ActionType_Bonemeal			= 10, // TODO
-	ActionType_BlockExecuteCommand		= 11, // TODO
-	ActionType_BlockExplode			= 12, // TODO
-	ActionType_ModifyBlockState		= 13, // TODO
-	ActionType_SetBlock			= 14, // TODO
-	// Block meta
-	ActionType_Offset			= 15, // TODO
-	// https://origins.readthedocs.io/en/latest/types/entity_action_types/
-	// Entity
-	ActionType_AddVelocity			= 16, // TODO
-	ActionType_AddXP			= 17, // TODO
-	ActionType_ApplyEffect			= 18, // TODO
-	ActionType_AreaOfEffect			= 19, // TODO
-	ActionType_BlockActionAt		= 20, // TODO
-	ActionType_ChangeResource		= 21, // TODO
-	ActionType_ClearEffect			= 22, // TODO
-	ActionType_CraftingTable		= 23, // TODO
-	ActionType_Damage			= 24, // TODO
-	ActionType_Dismount			= 25, // TODO
-	ActionType_EmitGameEvent		= 26, // TODO
-	ActionType_EnderChest			= 27, // TODO
-	ActionType_EquippedItemAction		= 28, // TODO
-	ActionType_ExecuteCommand		= 29, // TODO
-	ActionType_Exhaust			= 30, // TODO
-	ActionType_Explode			= 31, // TODO
-	ActionType_Extinguish			= 32, // TODO
-	ActionType_Feed				= 33, // TODO
-	ActionType_GainAir			= 34, // TODO
-	ActionType_Give				= 35, // TODO
-	ActionType_GrantPower			= 36, // TODO
-	ActionType_Heal				= 37, // TODO
-	ActionType_PassengerAction		= 38, // TODO
-	ActionType_PlaySound			= 39, // TODO
-	ActionType_Raycast			= 40, // TODO
-	ActionType_RevokePower			= 41, // TODO
-	ActionType_RidingAction			= 42, // TODO
-	ActionType_SetFallDistance		= 43, // TODO
-	ActionType_SetOnFire			= 44, // TODO
-	ActionType_SpawnEffectCloud		= 45, // TODO
-	ActionType_SpawnEntity			= 46, // TODO
-	ActionType_SpawnParticles		= 47, // TODO
-	ActionType_SwingHand			= 48, // TODO
-	ActionType_Toggle			= 49, // TODO
-	ActionType_TriggerCooldown		= 50, // TODO
-	// https://origins.readthedocs.io/en/latest/types/item_action_types/
-	// Item
-	ActionType_Consume			= 51, // TODO
-	ActionType_ItemDamage			= 52, // TODO
-	ActionType_Modify			= 53, // TODO
-	// https://origins.readthedocs.io/en/latest/types/meta_action_types/
-	// Meta
-	ActionType_And				= 54, // TODO
-	ActionType_Chance			= 55, // TODO
-	ActionType_Choice			= 56, // TODO
-	ActionType_Delay			= 57, // TODO
-	ActionType_IfElseList			= 58, // TODO
-	ActionType_IfElse			= 59, // TODO
-	ActionType_Nothing			= 60  // TODO
+	BiEntityActionType_ActorAction		= 6,  // TODO
+	BiEntityActionType_Invert		= 7,  // TODO
+	BiEntityActionType_TargetAction		= 8   // TODO
 };
 
-enum ConditionType {
-	ConditionType_None			= 0,
+enum BlockActionType {
+	BlockActionType_None			= 0,
+	// https://origins.readthedocs.io/en/latest/types/block_action_types/
+	// Block
+	BlockActionType_AddBlock		= 1, // TODO
+	BlockActionType_Bonemeal		= 2, // TODO
+	BlockActionType_ExecuteCommand		= 3, // TODO
+	BlockActionType_Explode			= 4, // TODO
+	BlockActionType_ModifyBlockState	= 5, // TODO
+	BlockActionType_SetBlock		= 6, // TODO
+	// Block meta
+	BlockActionType_Offset			= 7  // TODO
+};
+
+enum EntityActionType {
+	EntityActionType_None			= 0,
+	// https://origins.readthedocs.io/en/latest/types/entity_action_types/
+	// Entity
+	EntityActionType_AddVelocity		= 1,  // TODO
+	EntityActionType_AddXP			= 2,  // TODO
+	EntityActionType_ApplyEffect		= 3,  // TODO
+	EntityActionType_AreaOfEffect		= 4,  // TODO
+	EntityActionType_BlockActionAt		= 5,  // TODO
+	EntityActionType_ChangeResource		= 6,  // TODO
+	EntityActionType_ClearEffect		= 7,  // TODO
+	EntityActionType_CraftingTable		= 8,  // TODO
+	EntityActionType_Damage			= 9,  // TODO
+	EntityActionType_Dismount		= 10, // TODO
+	EntityActionType_EmitGameEvent		= 11, // TODO
+	EntityActionType_EnderChest		= 12, // TODO
+	EntityActionType_EquippedItemAction	= 13, // TODO
+	EntityActionType_ExecuteCommand		= 14, // TODO
+	EntityActionType_Exhaust		= 15, // TODO
+	EntityActionType_Explode		= 16, // TODO
+	EntityActionType_Extinguish		= 17, // TODO
+	EntityActionType_Feed			= 18, // TODO
+	EntityActionType_GainAir		= 19, // TODO
+	EntityActionType_Give			= 20, // TODO
+	EntityActionType_GrantPower		= 21, // TODO
+	EntityActionType_Heal			= 22, // TODO
+	EntityActionType_PassengerAction	= 23, // TODO
+	EntityActionType_PlaySound		= 24, // TODO
+	EntityActionType_Raycast		= 25, // TODO
+	EntityActionType_RevokePower		= 26, // TODO
+	EntityActionType_RidingAction		= 27, // TODO
+	EntityActionType_SetFallDistance	= 28, // TODO
+	EntityActionType_SetOnFire		= 29, // TODO
+	EntityActionType_SpawnEffectCloud	= 30, // TODO
+	EntityActionType_SpawnEntity		= 31, // TODO
+	EntityActionType_SpawnParticles		= 32, // TODO
+	EntityActionType_SwingHand		= 33, // TODO
+	EntityActionType_Toggle			= 34, // TODO
+	EntityActionType_TriggerCooldown	= 35  // TODO
+};
+
+enum ItemActionType {
+	ItemActionType_None			= 0,
+	// https://origins.readthedocs.io/en/latest/types/item_action_types/
+	// Item
+	ItemActionType_Consume			= 1, // TODO
+	ItemActionType_Damage			= 2, // TODO
+	ItemActionType_Modify			= 3  // TODO
+};
+
+enum MetaActionType {
+	MetaActionType_None			= 0,
+	// https://origins.readthedocs.io/en/latest/types/meta_action_types/
+	// Meta
+	MetaActionType_And			= 1, // TODO
+	MetaActionType_Chance			= 2, // TODO
+	MetaActionType_Choice			= 3, // TODO
+	MetaActionType_Delay			= 4, // TODO
+	MetaActionType_IfElseList		= 5, // TODO
+	MetaActionType_IfElse			= 6, // TODO
+	MetaActionType_Nothing			= 7  // TODO
+};
+
+enum BiEntityConditionType {
+	BiEntityConditionType_None		= 0,
 	// https://origins.readthedocs.io/en/latest/types/bientity_condition_types/
 	// Bi-entity
-	ConditionType_AttackTarget		= 1,   // TODO
-	ConditionType_BiEntityAttacker		= 2,   // TODO
-	ConditionType_CanSee			= 3,   // TODO
-	ConditionType_Distance			= 4,   // TODO
-	ConditionType_Owner			= 5,   // TODO
-	ConditionType_RelativeRotation		= 6,   // TODO
-	ConditionType_BiEntityRidingRecursive	= 7,   // TODO
-	ConditionType_BiEntityRidingRoot	= 8,   // TODO
+	BiEntityConditionType_AttackTarget	= 1,   // TODO
+	BiEntityConditionType_Attacker		= 2,   // TODO
+	BiEntityConditionType_CanSee		= 3,   // TODO
+	BiEntityConditionType_Distance		= 4,   // TODO
+	BiEntityConditionType_Owner		= 5,   // TODO
+	BiEntityConditionType_RelativeRotation	= 6,   // TODO
+	BiEntityConditionType_RidingRecursive	= 7,   // TODO
+	BiEntityConditionType_RidingRoot	= 8,   // TODO
 	// Meta
-	ConditionType_ActorCondition		= 10,  // TODO
-	ConditionType_Both			= 11,  // TODO
-	ConditionType_Either			= 12,  // TODO
-	ConditionType_Invert			= 13,  // TODO
-	ConditionType_TargetCondition		= 14,  // TODO
-	ConditionType_Undirected		= 15,  // TODO
+	BiEntityConditionType_ActorCondition	= 10,  // TODO
+	BiEntityConditionType_Both		= 11,  // TODO
+	BiEntityConditionType_Either		= 12,  // TODO
+	BiEntityConditionType_Invert		= 13,  // TODO
+	BiEntityConditionType_TargetCondition	= 14,  // TODO
+	BiEntityConditionType_Undirected	= 15,  // TODO
+};
+
+enum BiomeConditionType {
+	BiomeConditionType_None			= 0,
 	// https://origins.readthedocs.io/en/latest/types/biome_condition_types/
 	// Biome
-	ConditionType_Category			= 16,  // TODO
-	ConditionType_HighHumidity		= 17,  // TODO
-	ConditionType_Precipitation		= 18,  // TODO
-	ConditionType_Temperature		= 19,  // TODO
+	BiomeConditionType_Category		= 1,  // TODO
+	BiomeConditionType_HighHumidity		= 2,  // TODO
+	BiomeConditionType_Precipitation	= 3,  // TODO
+	BiomeConditionType_Temperature		= 4   // TODO
+};
+
+enum BlockConditionType {
+	BlockConditionType_None			= 0,
 	// https://origins.readthedocs.io/en/latest/types/block_condition_types/
 	// Block
-	ConditionType_Adjacent			= 20,  // TODO
-	ConditionType_Attachable		= 21,  // TODO
-	ConditionType_BlastResistance		= 22,  // TODO
-	ConditionType_BlockState		= 23,  // TODO
-	ConditionType_Block			= 24,  // TODO
-	ConditionType_DistanceFromCoordinatesBlk= 25,  // TODO
-	ConditionType_BlockExposedToSky		= 26,  // TODO
-	ConditionType_Fluid			= 27,  // TODO
-	ConditionType_Hardness			= 28,  // TODO
-	ConditionType_Height			= 29,  // TODO
-	ConditionType_BlockInTag		= 30,  // TODO
-	ConditionType_LightBlocking		= 31,  // TODO
-	ConditionType_LightLevel		= 32,  // TODO
-	ConditionType_Material			= 33,  // TODO
-	ConditionType_MovementBlocking		= 34,  // TODO
-	ConditionType_BlockNBT			= 35,  // TODO
-	ConditionType_Replacable		= 36,  // TODO
-	ConditionType_Slipperiness		= 37,  // TODO
-	ConditionType_Waterloggable		= 38,  // TODO
+	BlockConditionType_Adjacent		= 1,  // TODO
+	BlockConditionType_Attachable		= 2,  // TODO
+	BlockConditionType_BlastResistance	= 3,  // TODO
+	BlockConditionType_BlockState		= 4,  // TODO
+	BlockConditionType_Block		= 5,  // TODO
+	BlockConditionType_DistanceFromCoordinates=6, // TODO
+	BlockConditionType_ExposedToSky		= 7,  // TODO
+	BlockConditionType_Fluid		= 8,  // TODO
+	BlockConditionType_Hardness		= 9,  // TODO
+	BlockConditionType_Height		= 10, // TODO
+	BlockConditionType_InTag		= 11, // TODO
+	BlockConditionType_LightBlocking	= 12, // TODO
+	BlockConditionType_LightLevel		= 13, // TODO
+	BlockConditionType_Material		= 14, // TODO
+	BlockConditionType_MovementBlocking	= 15, // TODO
+	BlockConditionType_NBT			= 16, // TODO
+	BlockConditionType_Replacable		= 17, // TODO
+	BlockConditionType_Slipperiness		= 18, // TODO
+	BlockConditionType_Waterloggable	= 19, // TODO
 	// Meta
-	ConditionType_Offset			= 39,  // TODO
+	BlockConditionType_Offset		= 20  // TODO
+};
+
+enum DamageConditionType {
+	DamageConditionType_None		= 0,
 	// https://origins.readthedocs.io/en/latest/types/damage_condition_types/
 	// Damage
-	ConditionType_DamageAmount		= 40,  // TODO
-	ConditionType_Attacker			= 41,  // TODO
-	ConditionType_Fire			= 42,  // TODO
-	ConditionType_Name			= 43,  // TODO
-	ConditionType_Projectile		= 44,  // TODO
+	DamageConditionType_Amount		= 1, // TODO
+	DamageConditionType_Attacker		= 2, // TODO
+	DamageConditionType_Fire		= 3, // TODO
+	DamageConditionType_Name		= 4, // TODO
+	DamageConditionType_Projectile		= 5  // TODO
+};
+
+enum EntityConditionType {
+	EntityConditionType_None		= 0,
 	// https://origins.readthedocs.io/en/latest/types/entity_condition_types/
 	// Entity
-	ConditionType_Ability			= 45,  // TODO
-	ConditionType_Advancement		= 46,  // TODO
-	ConditionType_Air			= 47,  // TODO
-	ConditionType_Attribute			= 48,  // TODO
-	ConditionType_Biome			= 49,  // TODO
-	ConditionType_BlockCollision		= 50,  // TODO
-	ConditionType_BlockInRadius		= 51,  // TODO
-	ConditionType_Brightness		= 52,  // TODO
-	ConditionType_Climbing			= 53,  // TODO
-	ConditionType_CollidedHorizontally	= 54,  // TODO
-	ConditionType_Command			= 55,  // TODO
-	ConditionType_CreativeFlying		= 56,  // TODO
-	ConditionType_Daytime			= 57,  // TODO
-	ConditionType_Dimension			= 58,  // TODO
-	ConditionType_DistanceFromCoordinates	= 59,  // TODO
-	ConditionType_ElytraFlightPossible	= 60,  // TODO
-	ConditionType_Enchantment		= 61,  // TODO
-	ConditionType_EntityGroup		= 62,  // TODO
-	ConditionType_EntityType		= 63,  // TODO
-	ConditionType_EquippedItem		= 64,  // TODO
-	ConditionType_Exists			= 65,  // TODO
-	ConditionType_ExposedToSky		= 66,  // TODO
-	ConditionType_ExposedToSun		= 67,  // TODO
-	ConditionType_FallDistance		= 68,  // TODO
-	ConditionType_FallFlying		= 69,  // TODO
-	ConditionType_FluidHeight		= 70,  // TODO
-	ConditionType_FoodLevel			= 71,  // TODO
-	ConditionType_Gamemode			= 72,  // TODO
-	ConditionType_Health			= 73,  // TODO
-	ConditionType_InBlockAnywhere		= 74,  // TODO
-	ConditionType_InBlock			= 75,  // TODO
-	ConditionType_InRain			= 76,  // TODO
-	ConditionType_InTag			= 77,  // TODO
-	ConditionType_Invisible			= 78,  // TODO
-	ConditionType_Living			= 79,  // TODO
-	ConditionType_Moving			= 80,  // TODO
-	ConditionType_NBT			= 81,  // TODO
-	ConditionType_OnBlock			= 82,  // TODO
-	ConditionType_OnFire			= 83,  // TODO
-	ConditionType_Origin			= 84,  // TODO
-	ConditionType_PassengerRecursive	= 85,  // TODO
-	ConditionType_Passenger			= 86,  // TODO
-	ConditionType_PowerActive		= 87,  // TODO
-	ConditionType_PowerType			= 88,  // TODO
-	ConditionType_Power			= 89,  // TODO
-	ConditionType_Predicate			= 90,  // TODO
-	ConditionType_Raycast			= 91,  // TODO
-	ConditionType_RelativeHealth		= 92,  // TODO
-	ConditionType_Resource			= 93,  // TODO
-	ConditionType_RidingRecursive		= 94,  // TODO
-	ConditionType_RidingRoot		= 95,  // TODO
-	ConditionType_Riding			= 96,  // TODO
-	ConditionType_SaturationLevel		= 97,  // TODO
-	ConditionType_Scoreboard		= 98,  // TODO
-	ConditionType_Sneaking			= 99,  // TODO
-	ConditionType_Sprinting			= 100, // TODO
-	ConditionType_StatusEffect		= 101, // TODO
-	ConditionType_SubmergedIn		= 102, // TODO
-	ConditionType_Swimming			= 103, // TODO
-	ConditionType_Tamed			= 104, // TODO
-	ConditionType_TimeOfDay			= 105, // TODO
-	ConditionType_UsingEffectiveTool	= 106, // TODO
-	ConditionType_UsingItem			= 107, // TODO
-	ConditionType_XPLevels			= 108, // TODO
-	ConditionType_XPPoints			= 109, // TODO
+	EntityConditionType_Ability		= 1,  // TODO
+	EntityConditionType_Advancement		= 2,  // TODO
+	EntityConditionType_Air			= 3,  // TODO
+	EntityConditionType_Attribute		= 4,  // TODO
+	EntityConditionType_Biome		= 5,  // TODO
+	EntityConditionType_BlockCollision	= 6,  // TODO
+	EntityConditionType_BlockInRadius	= 7,  // TODO
+	EntityConditionType_Brightness		= 8,  // TODO
+	EntityConditionType_Climbing		= 9,  // TODO
+	EntityConditionType_CollidedHorizontally= 10, // TODO
+	EntityConditionType_Command		= 11, // TODO
+	EntityConditionType_CreativeFlying	= 12, // TODO
+	EntityConditionType_Daytime		= 13, // TODO
+	EntityConditionType_Dimension		= 14, // TODO
+	EntityConditionType_DistanceFromCoordinates=15,//TODO
+	EntityConditionType_ElytraFlightPossible= 16, // TODO
+	EntityConditionType_Enchantment		= 17, // TODO
+	EntityConditionType_EntityGroup		= 18, // TODO
+	EntityConditionType_EntityType		= 19, // TODO
+	EntityConditionType_EquippedItem	= 20, // TODO
+	EntityConditionType_Exists		= 21, // TODO
+	EntityConditionType_ExposedToSky	= 22, // TODO
+	EntityConditionType_ExposedToSun	= 23, // TODO
+	EntityConditionType_FallDistance	= 24, // TODO
+	EntityConditionType_FallFlying		= 25, // TODO
+	EntityConditionType_FluidHeight		= 26, // TODO
+	EntityConditionType_FoodLevel		= 27, // TODO
+	EntityConditionType_Gamemode		= 28, // TODO
+	EntityConditionType_Health		= 29, // TODO
+	EntityConditionType_InBlockAnywhere	= 30, // TODO
+	EntityConditionType_InBlock		= 31, // TODO
+	EntityConditionType_InRain		= 32, // TODO
+	EntityConditionType_InTag		= 33, // TODO
+	EntityConditionType_Invisible		= 34, // TODO
+	EntityConditionType_Living		= 35, // TODO
+	EntityConditionType_Moving		= 36, // TODO
+	EntityConditionType_NBT			= 37, // TODO
+	EntityConditionType_OnBlock		= 38, // TODO
+	EntityConditionType_OnFire		= 39, // TODO
+	EntityConditionType_Origin		= 40, // TODO
+	EntityConditionType_PassengerRecursive	= 41, // TODO
+	EntityConditionType_Passenger		= 42, // TODO
+	EntityConditionType_PowerActive		= 43, // TODO
+	EntityConditionType_PowerType		= 44, // TODO
+	EntityConditionType_Power		= 45, // TODO
+	EntityConditionType_Predicate		= 46, // TODO
+	EntityConditionType_Raycast		= 47, // TODO
+	EntityConditionType_RelativeHealth	= 48, // TODO
+	EntityConditionType_Resource		= 49, // TODO
+	EntityConditionType_RidingRecursive	= 50, // TODO
+	EntityConditionType_RidingRoot		= 51, // TODO
+	EntityConditionType_Riding		= 52, // TODO
+	EntityConditionType_SaturationLevel	= 53, // TODO
+	EntityConditionType_Scoreboard		= 54, // TODO
+	EntityConditionType_Sneaking		= 55, // TODO
+	EntityConditionType_Sprinting		= 56, // TODO
+	EntityConditionType_StatusEffect	= 57, // TODO
+	EntityConditionType_SubmergedIn		= 58, // TODO
+	EntityConditionType_Swimming		= 59, // TODO
+	EntityConditionType_Tamed		= 60, // TODO
+	EntityConditionType_TimeOfDay		= 61, // TODO
+	EntityConditionType_UsingEffectiveTool	= 62, // TODO
+	EntityConditionType_UsingItem		= 63, // TODO
+	EntityConditionType_XPLevels		= 64, // TODO
+	EntityConditionType_XPPoints		= 65  // TODO
+};
+
+enum FluidConditionType {
+	FluidConditionType_None			= 0,
 	// https://origins.readthedocs.io/en/latest/types/fluid_condition_types/
 	// Fluid
-	ConditionType_EmptyFluid		= 110, // TODO
-	ConditionType_FluidInTag		= 111, // TODO
-	ConditionType_Still			= 112, // TODO
+	FluidConditionType_Empty		= 1, // TODO
+	FluidConditionType_InTag		= 2, // TODO
+	FluidConditionType_Still		= 3  // TODO
+};
+
+enum ItemConditionType {
+	ItemConditionType_None			= 0,
 	// https://origins.readthedocs.io/en/latest/types/item_condition_types/
 	// Item
-	ConditionType_Amount			= 113, // TODO
-	ConditionType_ArmorValue		= 114, // TODO
-	ConditionType_Empty			= 115, // TODO
-	ConditionType_ItemEnchantment		= 116, // TODO
-	ConditionType_Fireproof			= 117, // TODO
-	ConditionType_Food			= 118, // TODO
-	ConditionType_HarvestLevel		= 119, // TODO
-	ConditionType_Ingredient		= 120, // TODO
-	ConditionType_Meat			= 121, // TODO
-	ConditionType_ItemNBT			= 122, // TODO
-	ConditionType_Smeltable			= 123, // TODO
+	ItemConditionType_Amount		= 1,  // TODO
+	ItemConditionType_ArmorValue		= 2,  // TODO
+	ItemConditionType_Empty			= 3,  // TODO
+	ItemConditionType_Enchantment		= 4,  // TODO
+	ItemConditionType_Fireproof		= 5,  // TODO
+	ItemConditionType_Food			= 6,  // TODO
+	ItemConditionType_HarvestLevel		= 7,  // TODO
+	ItemConditionType_Ingredient		= 8,  // TODO
+	ItemConditionType_Meat			= 9,  // TODO
+	ItemConditionType_NBT			= 10, // TODO
+	ItemConditionType_Smeltable		= 11  // TODO
+};
+
+enum MetaConditionType {
+	MetaConditionType_None			= 0,
 	// https://origins.readthedocs.io/en/latest/types/meta_condition_types/
 	// Meta
-	ConditionType_And			= 124, // TODO
-	ConditionType_Constant			= 125, // TODO
-	ConditionType_Not			= 126, // TODO
-	ConditionType_Or			= 127  // TODO
+	MetaConditionType_And			= 1, // TODO
+	MetaConditionType_Constant		= 2, // TODO
+	MetaConditionType_Not			= 3, // TODO
+	MetaConditionType_Or			= 4  // TODO
 };
+
 
 #endif//ORIGINS_H_INCLUDED
 
