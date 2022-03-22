@@ -1,5 +1,4 @@
-#ifndef MAIN_HPP_INCLUDED
-#define MAIN_HPP_INCLUDED
+#pragma once
 
 #include <stdio.h>
 #include <ctype.h>
@@ -33,6 +32,4 @@ namespace Origins {
 	void UpdateWindow(bool *open);
 	void UpdateLoadWindow(bool *open);
 }
-
-#endif//MAIN_HPP_INCLUDED
 
