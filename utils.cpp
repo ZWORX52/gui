@@ -1,4 +1,4 @@
-#include "main.h"
+#include "main.hpp"
 
 
 void Utils::ClearBuffer(char buf[]) {

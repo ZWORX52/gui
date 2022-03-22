@@ -1,4 +1,4 @@
-#include "main.h"
+#include "main.hpp"
 
 char WordleEncryptionIn[BUFFER_SIZE] = { 0 };
 char WordleEncryptionOut[BUFFER_SIZE] = { 0 };

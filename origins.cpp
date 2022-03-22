@@ -1,4 +1,4 @@
-#include "origins.h"
+#include "origins.hpp"
 
 bool show_load_window = false;
 bool show_save_window = false;
