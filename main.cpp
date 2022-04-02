@@ -36,8 +36,9 @@ int main() {
 	bool show_wordle_encrypt = false;
 	bool show_wordle_encrypt_info_window = false;
 	bool show_origins = false;
+	bool show_astar = false;
 	
-	ImGuiWindowFlags flags = 0;
+	ImGuiWindowFlags flags = ImGuiWindowFlags_None;
 	flags |= ImGuiWindowFlags_MenuBar;
 	flags |= ImGuiWindowFlags_AlwaysAutoResize;
 
@@ -67,13 +68,14 @@ int main() {
 				ImGui::EndMenu();
 			}
 
-			if (ImGui::BeginMenu("Encryption")) {
-				ImGui::MenuItem("Wordle encryption", NULL, &show_wordle_encrypt);
-				ImGui::EndMenu();
-			}
-
 			if (ImGui::BeginMenu("Minecraft")) {
 				ImGui::MenuItem("Origins datapack generator", NULL, &show_origins);
+				ImGui::EndMenu();
+			}
+			
+			if (ImGui::BeginMenu("Algorithms")) {
+				ImGui::MenuItem("A* (AStar)", NULL, &show_astar);
+				ImGui::MenuItem("Wordle encryption", NULL, &show_wordle_encrypt);
 				ImGui::EndMenu();
 			}
 
@@ -94,6 +96,9 @@ int main() {
 
 		if (show_origins)
 			Origins::UpdateWindow(&show_origins);
+
+		if (show_astar)
+			AStar::UpdateWindow(&show_astar);
 
 		// Display frame
 		ImGui::Render();

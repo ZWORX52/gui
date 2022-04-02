@@ -1,3 +1,5 @@
+#include <iostream>
+#include <fstream>
 #include "origins.hpp"
 
 bool show_load_window = false;
@@ -5,27 +7,13 @@ bool show_save_window = false;
 bool show_save_as_window = false;
 bool show_new_window = false;
 
-StringField::StringField(std::string name, std::string val) {
-	this->name = name;
-	this->val = val;
-}
-
-BoolField::BoolField(std::string name, bool val) {
-	this->name = name;
-	this->val = val;
-}
-
-IntField::IntField(std::string name, int val) {
-	this->name = name;
-	this->val = val;
-}
-
-void Origins::UpdateLoadWindow(bool *open) {
-	return;
+const char *OriginsData::PowerToString(int type, OriginsData::PowerMode mode) {
+	std::string result;
+	return result.c_str();
 }
 
 void Origins::UpdateWindow(bool *open) {
-	ImGuiWindowFlags WindowFlags = 0;
+	ImGuiWindowFlags WindowFlags = ImGuiWindowFlags_None;
 	WindowFlags |= ImGuiWindowFlags_MenuBar;
 	WindowFlags |= ImGuiWindowFlags_AlwaysAutoResize;
 	ImGui::Begin("Origins datapacks", open, WindowFlags);
@@ -41,7 +29,9 @@ void Origins::UpdateWindow(bool *open) {
 		ImGui::EndMenuBar();
 	}
 
-	ImGui::Text("Currently made datapacks: (click one to load)");
+	ImGui::Text("Currently loaded datapacks:");
+
+	ImGui::Text("Undone!");
 
 	ImGui::End();
 }

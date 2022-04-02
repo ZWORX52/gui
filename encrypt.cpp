@@ -40,7 +40,7 @@ void WordleEncryption::Decrypt(char in[], char out[]) {
 }
 
 void WordleEncryption::UpdateWindow(bool *open) {
-	ImGuiWindowFlags WindowFlags = 0;
+	ImGuiWindowFlags WindowFlags = ImGuiWindowFlags_None;
 	WindowFlags |= ImGuiWindowFlags_MenuBar;
 	WindowFlags |= ImGuiWindowFlags_AlwaysAutoResize;
 

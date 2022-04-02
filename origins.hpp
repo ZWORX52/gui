@@ -6,64 +6,6 @@
 #include <vector>
 
 namespace OriginsData {
-	class Condition {
-		public:
-			BiEntityConditionType bientity_condition;
-			BiomeConditionType biome_condition;
-			BlockConditionType block_condition;
-			DamageConditionType damage_condition;
-			EntityConditionType entity_condition;
-			FluidConditionType fluid_condition;
-			ItemConditionType item_condition;
-			MetaConditionType meta_condition;
-
-			bool Verify(); // Check if it's a valid condition, i.e. if only one condition is set.
-			
-			// Sets condition to the specified condition, None-ing other conditions along the way.
-			void SetCondition(BiEntityConditionType);
-			void SetCondition(BiomeConditionType);
-			void SetCondition(BlockConditionType);
-			void SetCondition(DamageConditionType);
-			void SetCondition(EntityConditionType);
-			void SetCondition(FluidConditionType);
-			void SetCondition(ItemConditionType);
-			void SetCondition(MetaConditionType);
-
-			Condition();
-	};
-
-	class Power {
-		public:
-			PowerType normal_type;
-			ActionPowerType action_type;
-			ModifyPowerType modify_type;
-			PreventPowerType prevent_type;
-
-			PowerMode mode;
-
-			Condition condition;
-
-			void SetCondition(PowerType);
-			void SetCondition(ActionPowerType);
-			void SetCondition(ModifyPowerType);
-			void SetCondition(PreventPowerType);
-
-			Power();
-	};
-
-	class Origin {
-		public:
-			std::vector<Power> powers;
-	};
-
-	class Layer {
-		public:
-			std::vector<Origin> origins;
-			std::string layer_name;
-
-			Layer();
-	};
-
 	enum PowerMode {
 		PowerMode_None				= 0,
 		// Used by Power class to track what power type is currently set
@@ -284,6 +226,18 @@ namespace OriginsData {
 		MetaActionType_IfElse			= 6, // TODO
 		MetaActionType_Nothing			= 7  // TODO
 	};
+	
+	enum ConditionMode {
+		ConditionMode_None			= 0,
+		ConditionMode_BiEntity			= 1,
+		ConditionMode_Biome			= 2,
+		ConditionMode_Block			= 3,
+		ConditionMode_Damage			= 4,
+		ConditionMode_Entity			= 5,
+		ConditionMode_Fluid			= 6,
+		ConditionMode_Item			= 7,
+		ConditionMode_Meta			= 8
+	};
 
 	enum BiEntityConditionType {
 		BiEntityConditionType_None		= 0,
@@ -460,6 +414,69 @@ namespace OriginsData {
 		MetaConditionType_Not			= 3, // TODO
 		MetaConditionType_Or			= 4  // TODO
 	};
+
+	class Condition {
+		public:
+			ConditionMode mode;
+
+			BiEntityConditionType bientity_condition;
+			BiomeConditionType biome_condition;
+			BlockConditionType block_condition;
+			DamageConditionType damage_condition;
+			EntityConditionType entity_condition;
+			FluidConditionType fluid_condition;
+			ItemConditionType item_condition;
+			MetaConditionType meta_condition;
+
+			bool Verify(); // Check if it's a valid condition, i.e. if only one condition is set.
+			
+			// Sets condition to the specified condition, None-ing other conditions along the way.
+			void SetCondition(int, ConditionMode);
+
+			Condition();
+	};
+
+	class Power {
+		public:
+			PowerMode mode;
+
+			PowerType normal_type;
+			ActionPowerType action_type;
+			ModifyPowerType modify_type;
+			PreventPowerType prevent_type;
+
+			Condition condition;
+
+			void SetPower(int, PowerMode);
+
+			Power();
+	};
+
+	class Origin {
+		public:
+			std::vector<Power> powers;
+	};
+
+	class Layer {
+		public:
+			std::vector<Origin> origins;
+			std::string layer_name;
+
+			Layer();
+	};
+
+	class Datapack {
+		public:
+			Layer layer; // Because most (read: all) datapacks just add to the origins layer.
+			// Support for more layers to be added.
+			std::string filename;
+
+			Datapack();
+
+			bool Save();
+	};
+
+	// int represents a power type, as "PowerType type" is synonymous to "int type"
+	const char *PowerToString(int type, PowerMode mode);
+	void LoadFile(std::string filename, std::vector<Datapack> *datapack_list);
 }
-
-

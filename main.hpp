@@ -31,5 +31,10 @@ namespace Utils {
 namespace Origins {
 	void UpdateWindow(bool *open);
 	void UpdateLoadWindow(bool *open);
+	void UpdateEditWindow(bool *open);
+}
+
+namespace AStar {
+	void UpdateWindow(bool *open);
 }
 
