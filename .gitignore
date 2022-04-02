@@ -1,3 +1,6 @@
 # Vim swp files
 .*.swp
 
+# Also the object files
+objdir/*
+
