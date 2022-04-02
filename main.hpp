@@ -1,10 +1,12 @@
 #pragma once
 
-#include <stdio.h>
-#include <ctype.h>
-#include <string.h>
-
+#include <cstring>
+#include <cctype>
+#include <cstdio>
 #include <cmath>
+
+#include <string>
+#include <vector>
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -12,6 +14,7 @@
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
 #define BUFFER_SIZE 1024
+#define VECTOR_ADD(v1, v2) (ImVec2(v1.x + v2.x, v1.y + v2.y))
 
 // Function prototypes & namespaces
 namespace WordleEncryption {
@@ -36,5 +39,7 @@ namespace Origins {
 
 namespace AStar {
 	void UpdateWindow(bool *open);
+	void DrawGrid(ImVec2 pos, float size);
+	void DrawGrid(ImVec2 pos, ImVec2 size);
 }
 

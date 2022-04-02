@@ -1,10 +1,5 @@
 #include "main.hpp"
 
-char WordleEncryptionIn[BUFFER_SIZE] = { 0 };
-char WordleEncryptionOut[BUFFER_SIZE] = { 0 };
-char WordleDecryptionIn[BUFFER_SIZE] = { 0 };
-char WordleDecryptionOut[BUFFER_SIZE] = { 0 };
-
 int WordleEncryption::EncryptFilter(ImGuiInputTextCallbackData* data) {
 	if ((data->EventChar > 64 && data->EventChar < 91) || (data->EventChar > 96 && data->EventChar < 123)) {
 		// In other words, [A..Z] or [a..z]. Make sure it's lowercase!
@@ -40,6 +35,11 @@ void WordleEncryption::Decrypt(char in[], char out[]) {
 }
 
 void WordleEncryption::UpdateWindow(bool *open) {
+	static char WordleEncryptionIn[BUFFER_SIZE] = { 0 };
+	static char WordleEncryptionOut[BUFFER_SIZE] = { 0 };
+	static char WordleDecryptionIn[BUFFER_SIZE] = { 0 };
+	static char WordleDecryptionOut[BUFFER_SIZE] = { 0 };
+
 	ImGuiWindowFlags WindowFlags = ImGuiWindowFlags_None;
 	WindowFlags |= ImGuiWindowFlags_MenuBar;
 	WindowFlags |= ImGuiWindowFlags_AlwaysAutoResize;

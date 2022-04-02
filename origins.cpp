@@ -2,17 +2,17 @@
 #include <fstream>
 #include "origins.hpp"
 
-bool show_load_window = false;
-bool show_save_window = false;
-bool show_save_as_window = false;
-bool show_new_window = false;
-
 const char *OriginsData::PowerToString(int type, OriginsData::PowerMode mode) {
 	std::string result;
 	return result.c_str();
 }
 
 void Origins::UpdateWindow(bool *open) {
+	static bool show_load_window = false;
+	static bool show_save_window = false;
+	static bool show_save_as_window = false;
+	static bool show_new_window = false;
+
 	ImGuiWindowFlags WindowFlags = ImGuiWindowFlags_None;
 	WindowFlags |= ImGuiWindowFlags_MenuBar;
 	WindowFlags |= ImGuiWindowFlags_AlwaysAutoResize;

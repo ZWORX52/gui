@@ -2,9 +2,6 @@
 
 #include "main.hpp"
 
-#include <string>
-#include <vector>
-
 namespace OriginsData {
 	enum PowerMode {
 		PowerMode_None				= 0,
