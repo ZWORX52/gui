@@ -37,7 +37,7 @@ int main() {
 	bool show_wordle_encrypt_info_window = false;
 	bool show_origins = false;
 	bool show_astar = false;
-	
+
 	ImGuiWindowFlags flags = ImGuiWindowFlags_None;
 	flags |= ImGuiWindowFlags_MenuBar;
 	flags |= ImGuiWindowFlags_AlwaysAutoResize;
@@ -53,6 +53,10 @@ int main() {
 		ImGui::NewFrame();
 
 		ImGui::Begin("Main window", &open, flags);
+
+		if (ImGui::IsKeyPressed(562) &&			// 562 = q
+				io.KeyShift && io.KeyCtrl)
+			break;
 
 		if (ImGui::BeginMenuBar()) {
 			if (ImGui::BeginMenu("About")) {

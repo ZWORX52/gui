@@ -5,16 +5,21 @@
 #include <cstdio>
 #include <cmath>
 
+#include <fstream>
 #include <string>
 #include <vector>
+#include <random>
+
+#include <sys/syscall.h>
+#include <linux/random.h>
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "imgui_internal.h"
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
 #define BUFFER_SIZE 1024
-#define VECTOR_ADD(v1, v2) (ImVec2(v1.x + v2.x, v1.y + v2.y))
 
 // Function prototypes & namespaces
 namespace WordleEncryption {
@@ -29,6 +34,10 @@ namespace WordleEncryption {
 
 namespace Utils {
 	void ClearBuffer(char buf[]);
+	void SeedCSPRNG();
+	double Random();
+	bool Equal(ImVec2 a, ImVec2 b);
+	ImVec2 v_abs(ImVec2 __val);
 }
 
 namespace Origins {
@@ -38,8 +47,43 @@ namespace Origins {
 }
 
 namespace AStar {
-	void UpdateWindow(bool *open);
-	void DrawGrid(ImVec2 pos, float size);
-	void DrawGrid(ImVec2 pos, ImVec2 size);
+	class Node {
+		public:
+			ImVec2 pos;
+			int generation;
+			Node *parent;
+			double distance;
+			double score;
+
+			Node(ImVec2 pos, Node *parent);
+			double ComputeDistanceToEnd();
+			void ComputeScore();
+	};
+
+	enum GridSquare {
+		GridSquare_None			= 0,
+		GridSquare_Wall			= 1,
+		GridSquare_Start		= 2,
+		GridSquare_End			= 3,
+		GridSquare_Path			= 4,
+		GridSquare_Considered		= 5,
+		GridSquare_ToConsider		= 6
+	};
+
+	void 		UpdateWindow(bool *open);
+	void 		SetSquareAtMouse(GridSquare type);
+	void 		SetSquareAt(ImVec2 pos, GridSquare type);
+	GridSquare 	GetSquareAt(ImVec2 pos);
+	void 		DrawGrid();
+	void 		DrawGrid(float size);
+	void 		DrawGrid(ImVec2 pos);
+	void 		DrawGrid(ImVec2 pos, float size);
+	void 		DrawGrid(ImVec2 pos, ImVec2 size);
+	void 		FillGrid(double rate);
+	void 		ClearGrid();
+	// Actual algorithm functions
+	void 		Tick();
+	void 		CalculatePath(Node *from);
+	void		AddToBeConsidered(Node toAdd);
 }
 
