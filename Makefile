@@ -59,6 +59,9 @@ $(OBJDIR)%.o:$(IMGUI_DIR)/%.cpp
 $(OBJDIR)%.o:$(IMGUI_DIR)/backends/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
+run: imgui
+	@./main
+
 all: imgui java
 
 imgui: $(EXE)
