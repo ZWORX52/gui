@@ -25,7 +25,7 @@ UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
 
 CXXFLAGS = -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends
-CXXFLAGS += -g -Wall -Wformat -Wpedantic
+CXXFLAGS += -g -Wall -Wextra -Wpedantic -Werror -Wformat 
 LIBS =
 
 ##---------------------------------------------------------------------
@@ -59,10 +59,10 @@ $(OBJDIR)%.o:$(IMGUI_DIR)/%.cpp
 $(OBJDIR)%.o:$(IMGUI_DIR)/backends/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
+all: imgui java
+
 run: imgui
 	@./main
-
-all: imgui java
 
 imgui: $(EXE)
 	@echo Build complete for $(ECHO_MESSAGE)

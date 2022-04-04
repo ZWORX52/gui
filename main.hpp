@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 #include <random>
+#include <memory>
+#include <list>
 
 #include <sys/syscall.h>
 #include <linux/random.h>
@@ -57,7 +59,8 @@ namespace AStar {
 
 			Node(ImVec2 pos, Node *parent);
 			double ComputeDistanceToEnd();
-			void ComputeScore();
+			double ComputeScore();
+			bool operator<(double other);
 	};
 
 	enum GridSquare {
@@ -74,6 +77,7 @@ namespace AStar {
 	void 		SetSquareAtMouse(GridSquare type);
 	void 		SetSquareAt(ImVec2 pos, GridSquare type);
 	GridSquare 	GetSquareAt(ImVec2 pos);
+	ImVec2		GetGridLocationUnderMouse();
 	void 		DrawGrid();
 	void 		DrawGrid(float size);
 	void 		DrawGrid(ImVec2 pos);
@@ -81,9 +85,12 @@ namespace AStar {
 	void 		DrawGrid(ImVec2 pos, ImVec2 size);
 	void 		FillGrid(double rate);
 	void 		ClearGrid();
+	bool		InvalidPos(ImVec2 pos);
 	// Actual algorithm functions
 	void 		Tick();
 	void 		CalculatePath(Node *from);
-	void		AddToBeConsidered(Node toAdd);
+	void		AddToConsider(Node toAdd);
+	void		Setup();
+	void		Stop();
 }
 

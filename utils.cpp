@@ -38,6 +38,6 @@ ImVec2 Utils::v_abs(ImVec2 __val) {
 }
 
 bool Utils::Equal(ImVec2 a, ImVec2 b) {
-	return a.x == b.x && a.y == b.y;
+	return (int) a.x == (int) b.x && (int) a.y == (int) b.y;
 }
 

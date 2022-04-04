@@ -3,8 +3,8 @@
 std::vector<std::vector<AStar::GridSquare>> grid;
 
 std::vector<AStar::Node> toConsider;
-std::vector<AStar::Node> considered;
-std::vector<AStar::Node> finalPath;
+std::list<AStar::Node> considered;
+// std::vector<AStar::Node> finalPath;  // Unnessary (for now)
 
 ImVec4 col_none;
 ImVec4 col_wall;
@@ -38,28 +38,27 @@ double AStar::Node::ComputeDistanceToEnd() {
 	return this->distance;
 }
 
-void AStar::Node::ComputeScore() {
+double AStar::Node::ComputeScore() {
 	// Side effect. Computes score
 	this->score = ComputeDistanceToEnd() + this->generation;
+	return this->score;
 }
 
-void AStar::CalculatePath(Node *from) {
-	// TODO
-	while (from != NULL) {
-		// The start node will have a NULL parent. Then, we stop.
-		SetSquareAt(from->pos, GridSquare_Path);
-		from = from->parent;
-	}
-	return;
+bool AStar::Node::operator<(double other) {
+	return this->score < other;
 }
 
-void AStar::AddToBeConsidered(AStar::Node toAdd) {
-	toAdd.ComputeScore();
-	// TODO
+void AStar::Setup() {
+	// May need to do more things here
+	running = true;
+	toConsider.push_back(Node(start_pos, NULL));
 }
 
-AStar::GridSquare AStar::GetSquareAt(ImVec2 pos) {
-	return grid[pos.y][pos.x];
+void AStar::Stop() {
+	// Prepare for next session.
+	running = false;
+	toConsider.clear();
+	considered.clear();
 }
 
 void AStar::Tick() {
@@ -67,15 +66,23 @@ void AStar::Tick() {
 	if (toConsider.size() == 0) {
 		// Nothing more to consider, therefore there is no path.
 		// TODO: Highlight closest node to the end (maybe with the path to that node?)
-		running = false;
+		Stop();
 		return;
 	}
-	Node thisConsider = toConsider.front();  // FIXME: Use pop_back instead of front and, using math, reverse the insertions (effectively reversing the list, putting the best element last)
+	// FIXME: Use pop_back instead of front and, using math, reverse the insertions (effectively reversing the list, putting the best element last)
+	// FIXME: Quick fix (and a bit dirty) would be to change the toConsider object from a vector to a list, as that would increase front removal times.
+	// FIXME: But, a list is slower than a vector (src: https://stackoverflow.com/questions/2209224/vector-vs-list-in-stl#comment20988874_2209224).
+	// FIXME: If I have time, the aforementioned "maths" should take care of everything. Wow, Java doesn't have ANY of these problems!
+	Node thisConsider = toConsider.front();
 	toConsider.erase(toConsider.begin());
 	if (Utils::Equal(thisConsider.pos, end_pos)) {
-		running = false;
 		CalculatePath(&thisConsider);
+		Stop();
+		return;
 	}
+	considered.push_back(thisConsider);  // Because we know that we want to consider it, put it in the array now.
+	printf("%f, %f @ %p -> %p\n", thisConsider.pos.x, thisConsider.pos.y, (void *)&thisConsider, (void *)&considered.back());
+	SetSquareAt(thisConsider.pos, GridSquare_Considered);
 	ImVec2 directions[] = {
 		ImVec2(-1,-1),ImVec2(0,-1),ImVec2(1,-1),
 		ImVec2(-1, 0),		   ImVec2(1, 0),
@@ -91,13 +98,57 @@ void AStar::Tick() {
 	 */
 	for (size_t i = 0; i < IM_ARRAYSIZE(directions); i++) {
 		ImVec2 next_pos = thisConsider.pos + directions[i];
+		if (InvalidPos(next_pos))
+			continue;
 		if (GetSquareAt(next_pos) == GridSquare_None || GetSquareAt(next_pos) == GridSquare_End)
-			AddToBeConsidered(Node(next_pos, &thisConsider));
+			// Pointers O.O
+			// The funny thing below is intentional. If we store a reference to thisConsider
+			// then when it gets deleted (alongside some other stuff) we actually have a
+			// stale reference. Update: This would work... except we are using vectors!
+			// ARRGH! Ah well, at least I have STL (cough cough C) and all I need to do is
+			// change a word or two... hopefully!
+			AddToConsider(Node(next_pos, &considered.back()));
 	}
+	// Preservation
+	SetSquareAt(start_pos, GridSquare_Start);
+	SetSquareAt(end_pos, GridSquare_End);
+}
+
+void AStar::CalculatePath(Node *from) {
+	// TODO
+	while (from != NULL) {
+		// The start node will have a NULL parent. Then, we stop.
+		printf("%p, here (parent is: %p)\n", (void *)from, (void *)from->parent);
+		SetSquareAt(from->pos, GridSquare_Path);
+		printf("set square at %f, %f!\n", from->pos.x, from->pos.y);
+		from = from->parent;
+	}
+	return;
+}
+
+void AStar::AddToConsider(AStar::Node toAdd) {
+	double score = toAdd.ComputeScore();
+	std::vector<Node>::iterator index = std::lower_bound(toConsider.begin(), toConsider.end(), score);
+	SetSquareAt(toAdd.pos, GridSquare_ToConsider);
+	toConsider.insert(index, toAdd);
+}
+
+bool AStar::InvalidPos(ImVec2 pos) {
+	return pos.x < 0 || pos.x >= grid_width ||
+		pos.y < 0 || pos.y >= grid_height;
+}
+
+ImVec2 AStar::GetGridLocationUnderMouse() {
+	ImVec2 v = (mouse_pos - grid_pos) / grid_size;
+	return ImVec2((int) v.x, (int) v.y);
+}
+
+AStar::GridSquare AStar::GetSquareAt(ImVec2 pos) {
+	return grid[pos.y][pos.x];
 }
 
 void AStar::SetSquareAtMouse(AStar::GridSquare type) {
-	SetSquareAt((mouse_pos - grid_pos) / grid_size, type);
+	SetSquareAt(GetGridLocationUnderMouse(), type);
 }
 
 void AStar::SetSquareAt(ImVec2 pos, AStar::GridSquare type) {
@@ -286,6 +337,12 @@ void AStar::UpdateWindow(bool *open) {
 			ClearGrid();
 		ImGui::SameLine();
 		ImGui::Checkbox("Setting start?", &startsetting);
+
+		if (ImGui::Button("Start"))
+			Setup();
+		ImGui::SameLine();
+		if (ImGui::Button("Step"))
+			Tick();
 	}
 
 	// Note: ImGui guarantees (enough for me at least) that grid_height won't ever be >100.
@@ -306,12 +363,38 @@ void AStar::UpdateWindow(bool *open) {
 	mouse_pos = io.MousePos;
 	if (io.MousePos.x > grid_pos.x && io.MousePos.x < grid_pos.x + grid_width * grid_size &&
 			io.MousePos.y > grid_pos.y && io.MousePos.y < grid_pos.y + grid_height * grid_size) {
-		if (ImGui::IsMouseDown(0))
+		if (ImGui::IsMouseDown(0)) {
 			// Left clicked
-			SetSquareAtMouse(startsetting ? GridSquare_Start : GridSquare_Wall);
-		else if (ImGui::IsMouseDown(1))
+			if (startsetting) {
+				// Make sure there is only one start and end and update start_pos
+				for (size_t i = 0; i < grid.size(); i++) {
+					for (size_t j = 0; j < grid[i].size(); j++) {
+						if (grid[i][j] == GridSquare_Start)
+							grid[i][j] = GridSquare_None;
+					}
+				}
+				SetSquareAtMouse(GridSquare_Start);
+				start_pos = GetGridLocationUnderMouse();
+			}
+			else
+				SetSquareAtMouse(GridSquare_Wall);
+		}
+		else if (ImGui::IsMouseDown(1)) {
 			// Right clicked
-			SetSquareAtMouse(startsetting ? GridSquare_End : GridSquare_None);
+			if (startsetting) {
+				// Make sure there is only one start and end and update start_pos
+				for (size_t i = 0; i < grid.size(); i++) {
+					for (size_t j = 0; j < grid[i].size(); j++) {
+						if (grid[i][j] == GridSquare_End)
+							grid[i][j] = GridSquare_None;
+					}
+				}
+				SetSquareAtMouse(GridSquare_End);
+				end_pos = GetGridLocationUnderMouse();
+			}
+			else
+				SetSquareAtMouse(GridSquare_None);
+		}
 	}
 
 	DrawGrid();
