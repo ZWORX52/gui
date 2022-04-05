@@ -65,7 +65,7 @@ void AStar::Tick() {
 	// Manages everything necessary in one step of the astar algorithm
 	if (toConsider.size() == 0) {
 		// Nothing more to consider, therefore there is no path.
-		// TODO: Highlight closest node to the end (maybe with the path to that node?)
+		// IDEA: Highlight closest node to the end (maybe with the path to that node?)
 		Stop();
 		return;
 	}
@@ -81,7 +81,6 @@ void AStar::Tick() {
 		return;
 	}
 	considered.push_back(thisConsider);  // Because we know that we want to consider it, put it in the array now.
-	printf("%f, %f @ %p -> %p\n", thisConsider.pos.x, thisConsider.pos.y, (void *)&thisConsider, (void *)&considered.back());
 	SetSquareAt(thisConsider.pos, GridSquare_Considered);
 	ImVec2 directions[] = {
 		ImVec2(-1,-1),ImVec2(0,-1),ImVec2(1,-1),
@@ -115,12 +114,11 @@ void AStar::Tick() {
 }
 
 void AStar::CalculatePath(Node *from) {
-	// TODO
 	while (from != NULL) {
 		// The start node will have a NULL parent. Then, we stop.
-		printf("%p, here (parent is: %p)\n", (void *)from, (void *)from->parent);
-		SetSquareAt(from->pos, GridSquare_Path);
-		printf("set square at %f, %f!\n", from->pos.x, from->pos.y);
+		GridSquare there = GetSquareAt(from->pos);
+		if (there != GridSquare_Start && there != GridSquare_End)
+			SetSquareAt(from->pos, GridSquare_Path);
 		from = from->parent;
 	}
 	return;
@@ -133,23 +131,13 @@ void AStar::AddToConsider(AStar::Node toAdd) {
 	toConsider.insert(index, toAdd);
 }
 
-bool AStar::InvalidPos(ImVec2 pos) {
-	return pos.x < 0 || pos.x >= grid_width ||
-		pos.y < 0 || pos.y >= grid_height;
-}
+bool AStar::InvalidPos(ImVec2 pos) 			{ return pos.x < 0 || pos.x >= grid_width || pos.y < 0 || pos.y >= grid_height; }
 
-ImVec2 AStar::GetGridLocationUnderMouse() {
-	ImVec2 v = (mouse_pos - grid_pos) / grid_size;
-	return ImVec2((int) v.x, (int) v.y);
-}
+ImVec2 AStar::GetGridLocationUnderMouse() 		{ ImVec2 v = (mouse_pos - grid_pos) / grid_size; return ImVec2((int) v.x, (int) v.y); }
 
-AStar::GridSquare AStar::GetSquareAt(ImVec2 pos) {
-	return grid[pos.y][pos.x];
-}
+AStar::GridSquare AStar::GetSquareAt(ImVec2 pos) 	{ return grid[pos.y][pos.x]; }
 
-void AStar::SetSquareAtMouse(AStar::GridSquare type) {
-	SetSquareAt(GetGridLocationUnderMouse(), type);
-}
+void AStar::SetSquareAtMouse(AStar::GridSquare type) 	{ SetSquareAt(GetGridLocationUnderMouse(), type); }
 
 void AStar::SetSquareAt(ImVec2 pos, AStar::GridSquare type) {
 	// Pos is the PIXEL COORDINATE in the grid. Small checks for whether it's actually in the grid are in order, though.
@@ -158,21 +146,13 @@ void AStar::SetSquareAt(ImVec2 pos, AStar::GridSquare type) {
 	grid[pos.y][pos.x] = type;
 }
 
-void AStar::DrawGrid() {
-	DrawGrid(grid_pos, ImVec2(grid_size, grid_size));
-}
+void AStar::DrawGrid() 					{ DrawGrid(grid_pos, ImVec2(grid_size, grid_size)); }
 
-void AStar::DrawGrid(ImVec2 pos) {
-	DrawGrid(pos, ImVec2(grid_size, grid_size));
-}
+void AStar::DrawGrid(ImVec2 pos) 			{ DrawGrid(pos, ImVec2(grid_size, grid_size)); }
 
-void AStar::DrawGrid(float size) {
-	DrawGrid(grid_pos, ImVec2(size, size));
-}
+void AStar::DrawGrid(float size) 			{ DrawGrid(grid_pos, ImVec2(size, size)); }
 
-void AStar::DrawGrid(ImVec2 pos, float size) {
-	DrawGrid(pos, ImVec2(size, size));
-}
+void AStar::DrawGrid(ImVec2 pos, float size) 		{ DrawGrid(pos, ImVec2(size, size)); }
 
 void AStar::DrawGrid(ImVec2 pos, ImVec2 size) {
 	// Draws the grid to the current window, with the top-left corner at `pos'
@@ -222,6 +202,19 @@ void AStar::ClearGrid() {
 	}
 }
 
+size_t AStar::ClearGridOf(GridSquare toClear) {
+	size_t count;  // If this isn't enough, I'm not writing `unsigned long long' everywhere lol
+	for (size_t i = 0; i < grid.size(); i++) {
+		for (size_t j = 0; j < grid[i].size(); j++) {
+			if (grid[i][j] == toClear) {
+				grid[i][j] = GridSquare_None;
+				count++;
+			}
+		}
+	}
+	return count;
+}
+
 void AStar::UpdateWindow(bool *open) {
 	ImGuiWindowFlags flags = ImGuiWindowFlags_None;
 	flags |= ImGuiWindowFlags_NoDecoration;
@@ -242,6 +235,7 @@ void AStar::UpdateWindow(bool *open) {
 
 	static bool startsetting = false;
 	static bool exclusivemode = false;
+	// static bool auto = false;  // TODO
 
 	col_none		= ImVec4(0.0f, 0.0f, 0.0f, 1.0f);  // #000000FF Black
 	col_wall		= ImVec4(1.0f, 0.0f, 0.0f, 1.0f);  // #FF0000FF Red
@@ -261,11 +255,33 @@ void AStar::UpdateWindow(bool *open) {
 	if (ImGui::IsKeyPressed(562) && io.KeyShift)	// 562 = q
 		*open = false;
 
-	if (ImGui::IsKeyPressed(551))			// 551 = f
-		FillGrid(rate);
+	if (ImGui::IsKeyPressed(563) && io.KeyShift) {	// 563 = r
+		Stop();
+		ClearGridOf(GridSquare_Path);
+		ClearGridOf(GridSquare_Considered);
+		ClearGridOf(GridSquare_ToConsider);
+	}
+
+	if (ImGui::IsKeyPressed(553) && io.KeyShift)	// 553 = h
+		ImGui::OpenPopup("Keybinds");
 
 	if (ImGui::IsKeyPressed(548))			// 548 = c
 		ClearGrid();
+
+	if (ImGui::IsKeyPressed(564) && !io.KeyShift)	// 564 = s
+		Setup();
+
+	if (ImGui::IsKeyPressed(551))			// 551 = f
+		FillGrid(rate);
+
+	if (ImGui::IsKeyPressed(565))			// 565 = t
+		Tick();
+
+	if (ImGui::IsKeyPressed(561) && running)	// 561 = p
+		running = false;
+
+	if (ImGui::IsKeyPressed(554))			// 554 = i
+	{ Setup(); running = false; }
 
 	if (!exclusivemode) {
 		if (ImGui::TreeNode("Keybinds")) {
@@ -287,9 +303,24 @@ void AStar::UpdateWindow(bool *open) {
 			ImGui::SameLine();
 			ImGui::Text("Close");
 
+			ImGui::Text("<S-r>:");
+			if (ImGui::IsItemActive() || ImGui::IsItemHovered())
+				ImGui::SetTooltip("Shift + r");
+			ImGui::SameLine();
+			ImGui::Text("Reset algorithm");
+
+			ImGui::Text("<S-h>:");
+			if (ImGui::IsItemActive() || ImGui::IsItemHovered())
+				ImGui::SetTooltip("Shift + h");
+			ImGui::SameLine();
+			ImGui::Text("Pull up keybinds");
+
 			ImGui::Text("c: Clear board");
 			ImGui::Text("s: Start");
 			ImGui::Text("f: Fill board");
+			ImGui::Text("t: Tick (step)");
+			ImGui::Text("p: Pause (if running)");
+			ImGui::Text("i: Initialize algorithm");
 
 			ImGui::TreePop();
 		}
@@ -302,6 +333,9 @@ void AStar::UpdateWindow(bool *open) {
 		ImGui::ColorEdit4("Considered"	, &col_considered.x);
 		ImGui::ColorEdit4("To consider"	, &col_toConsider.x);
 
+		ImGui::Separator();
+
+		ImGui::PushID("Resets");
 		if (ImGui::Button("Reset##1"))
 			grid_width = 30;
 		ImGui::SameLine();
@@ -313,7 +347,9 @@ void AStar::UpdateWindow(bool *open) {
 		ImGui::SameLine();
 		if (ImGui::Button("Reset##4"))
 			grid_size = 10;
+		ImGui::PopID();
 
+		ImGui::PushID("Vertical Sliders");
 		ImGui::VSliderInt("##1", ImVec2(43, 160), &grid_width, 1, 100, "%i");
 		if (ImGui::IsItemActive() || ImGui::IsItemHovered())
 			ImGui::SetTooltip("Height of grid (default: 30)");
@@ -329,20 +365,72 @@ void AStar::UpdateWindow(bool *open) {
 		ImGui::VSliderFloat("##4", ImVec2(43, 160), &grid_size, 1.0f, 20.0f, "%.0f");
 		if (ImGui::IsItemActive() || ImGui::IsItemHovered())
 			ImGui::SetTooltip("Square size (default: 10)");
+		ImGui::PopID();
 
 		if (ImGui::Button("Fill grid"))
 			FillGrid(rate);
 		ImGui::SameLine();
 		if (ImGui::Button("Clear grid"))
-			ClearGrid();
+			ClearGridOf(GridSquare_Wall);
 		ImGui::SameLine();
 		ImGui::Checkbox("Setting start?", &startsetting);
 
-		if (ImGui::Button("Start"))
-			Setup();
-		ImGui::SameLine();
-		if (ImGui::Button("Step"))
+		if (running) {
+			ImGui::BeginDisabled();
+			ImGui::Button("Start");
+			ImGui::EndDisabled();
 			Tick();
+		}
+		else
+			if (ImGui::Button("Start"))
+				Setup();
+		ImGui::SameLine();  // In each branch of the `if' above, we -- guaranteed -- have a button.
+		if (ImGui::Button("Reset algorithm")) {
+			Stop();  // Handles most things, but in this case we also want to clear stuff.
+			ClearGridOf(GridSquare_Path);
+			ClearGridOf(GridSquare_Considered);
+			ClearGridOf(GridSquare_ToConsider);
+		}
+	}
+	if (ImGui::BeginPopup("Keybinds")) {
+		// Yanked from keybinds tree above and should be synced with that tree.
+		ImGui::Text("<S-e>:");
+		if (ImGui::IsItemActive() || ImGui::IsItemHovered())
+			ImGui::SetTooltip("Shift + e");
+		ImGui::SameLine();
+		ImGui::Text("Toggle exclusive mode");
+
+		ImGui::Text("<S-s>:");
+		if (ImGui::IsItemActive() || ImGui::IsItemHovered())
+			ImGui::SetTooltip("Shift + s");
+		ImGui::SameLine();
+		ImGui::Text("Toggle setting start");
+
+		ImGui::Text("<S-q>:");
+		if (ImGui::IsItemActive() || ImGui::IsItemHovered())
+			ImGui::SetTooltip("Shift + q");
+		ImGui::SameLine();
+		ImGui::Text("Close");
+
+		ImGui::Text("<S-r>:");
+		if (ImGui::IsItemActive() || ImGui::IsItemHovered())
+			ImGui::SetTooltip("Shift + r");
+		ImGui::SameLine();
+		ImGui::Text("Reset algorithm");
+
+		ImGui::Text("<S-h>:");
+		if (ImGui::IsItemActive() || ImGui::IsItemHovered())
+			ImGui::SetTooltip("Shift + h");
+		ImGui::SameLine();
+		ImGui::Text("Pull up keybinds");
+
+		ImGui::Text("c: Clear board");
+		ImGui::Text("s: Start");
+		ImGui::Text("f: Fill board");
+		ImGui::Text("t: Tick (step)");
+		ImGui::Text("p: Pause (if running)");
+		ImGui::Text("i: Initialize algorithm");
+		ImGui::EndPopup();
 	}
 
 	// Note: ImGui guarantees (enough for me at least) that grid_height won't ever be >100.

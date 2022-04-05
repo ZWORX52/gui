@@ -84,7 +84,8 @@ namespace AStar {
 	void 		DrawGrid(ImVec2 pos, float size);
 	void 		DrawGrid(ImVec2 pos, ImVec2 size);
 	void 		FillGrid(double rate);
-	void 		ClearGrid();
+	void		ClearGrid();
+	size_t		ClearGridOf(GridSquare toClear);
 	bool		InvalidPos(ImVec2 pos);
 	// Actual algorithm functions
 	void 		Tick();

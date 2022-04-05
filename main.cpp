@@ -87,6 +87,10 @@ int main() {
 		}
 
 		ImGui::Text("FPS: %f", ImGui::GetIO().Framerate);
+
+		if (show_demo_window && ImGui::Button("Close demo window"))
+			show_demo_window = false;
+
 		if (ImGui::Button("Exit")) {
 			break;
 		}
