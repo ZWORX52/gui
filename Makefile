@@ -1,15 +1,4 @@
-#
-# Cross Platform Makefile
-# Compatible with MSYS2/MINGW, Ubuntu 14.04.1 and Mac OS X
-#
-# You will need GLFW (http://www.glfw.org):
-# Linux:
-#   apt-get install libglfw-dev
-# Mac OS X:
-#   brew install glfw
-# MSYS2:
-#   pacman -S --noconfirm --needed mingw-w64-x86_64-toolchain mingw-w64-x86_64-glfw
-#
+# Makefile for GUI program.
 
 #CXX = g++
 #CXX = clang++
@@ -26,7 +15,7 @@ LINUX_GL_LIBS = -lGL
 
 CXXFLAGS = -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends
 CXXFLAGS += -g -Wall -Wextra -Wpedantic -Werror -Wformat 
-LIBS =
+LIBS = -lgmp
 
 ##---------------------------------------------------------------------
 ## OPENGL ES
@@ -35,10 +24,6 @@ LIBS =
 ## This assumes a GL ES library available in the system, e.g. libGLESv2.so
 # CXXFLAGS += -DIMGUI_IMPL_OPENGL_ES2
 # LINUX_GL_LIBS = -lGLESv2
-
-##---------------------------------------------------------------------
-## BUILD FLAGS PER PLATFORM
-##---------------------------------------------------------------------
 
 ECHO_MESSAGE = "Linux"
 LIBS += $(LINUX_GL_LIBS) `pkg-config --static --libs glfw3`
