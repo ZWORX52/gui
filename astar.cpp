@@ -23,6 +23,7 @@ float grid_size = 10;
 int grid_width = 30;
 int grid_height = 30;
 bool running = false;
+unsigned path_length = 0;
 
 AStar::Node::Node(ImVec2 pos, Node *parent) {
 	this->pos = pos;
@@ -52,6 +53,7 @@ void AStar::Setup() {
 	// May need to do more things here
 	running = true;
 	toConsider.push_back(Node(start_pos, NULL));
+	path_length = 0;
 }
 
 void AStar::Stop() {
@@ -117,8 +119,10 @@ void AStar::CalculatePath(Node *from) {
 	while (from != NULL) {
 		// The start node will have a NULL parent. Then, we stop.
 		GridSquare there = GetSquareAt(from->pos);
-		if (there != GridSquare_Start && there != GridSquare_End)
+		if (there != GridSquare_Start && there != GridSquare_End) {
 			SetSquareAt(from->pos, GridSquare_Path);
+			path_length++;
+		}
 		from = from->parent;
 	}
 	return;
@@ -392,6 +396,7 @@ void AStar::UpdateWindow(bool *open) {
 			ClearGridOf(GridSquare_ToConsider);
 		}
 	}
+
 	if (ImGui::BeginPopup("Keybinds")) {
 		// Yanked from keybinds tree above and should be synced with that tree.
 		ImGui::Text("<S-e>:");
@@ -449,6 +454,7 @@ void AStar::UpdateWindow(bool *open) {
 
 	grid_pos = ImGui::GetCursorScreenPos();
 	mouse_pos = io.MousePos;
+	ImVec2 under_mouse = GetGridLocationUnderMouse();
 	if (io.MousePos.x > grid_pos.x && io.MousePos.x < grid_pos.x + grid_width * grid_size &&
 			io.MousePos.y > grid_pos.y && io.MousePos.y < grid_pos.y + grid_height * grid_size) {
 		if (ImGui::IsMouseDown(0)) {
@@ -462,7 +468,7 @@ void AStar::UpdateWindow(bool *open) {
 					}
 				}
 				SetSquareAtMouse(GridSquare_Start);
-				start_pos = GetGridLocationUnderMouse();
+				start_pos = under_mouse;
 			}
 			else
 				SetSquareAtMouse(GridSquare_Wall);
@@ -478,11 +484,17 @@ void AStar::UpdateWindow(bool *open) {
 					}
 				}
 				SetSquareAtMouse(GridSquare_End);
-				end_pos = GetGridLocationUnderMouse();
+				end_pos = under_mouse;
 			}
 			else
 				SetSquareAtMouse(GridSquare_None);
 		}
+	}
+
+	if (!InvalidPos(under_mouse) && GetSquareAt(under_mouse) == GridSquare_Path && !running) {
+		// There are only paths after having ran the algorithm at least once.
+		// IDEA: Get score of toConsider node (on demand as there is no easy way to query every frame)
+		ImGui::SetTooltip("Path length: %u", path_length);
 	}
 
 	DrawGrid();
