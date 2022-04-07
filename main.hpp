@@ -5,11 +5,11 @@
 #include <cstdio>
 #include <cmath>
 
+#include <functional>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <random>
-#include <memory>
 #include <list>
 
 #include <sys/syscall.h>
@@ -49,20 +49,6 @@ namespace Origins {
 }
 
 namespace AStar {
-	class Node {
-		public:
-			ImVec2 pos;
-			int generation;
-			Node *parent;
-			double distance;
-			double score;
-
-			Node(ImVec2 pos, Node *parent);
-			double ComputeDistanceToEnd();
-			double ComputeScore();
-			bool operator<(double other);
-	};
-
 	enum GridSquare {
 		GridSquare_None			= 0,
 		GridSquare_Wall			= 1,
@@ -73,24 +59,40 @@ namespace AStar {
 		GridSquare_ToConsider		= 6
 	};
 
-	void 		UpdateWindow(bool *open);
-	void 		SetSquareAtMouse(GridSquare type);
-	void 		SetSquareAt(ImVec2 pos, GridSquare type);
-	GridSquare 	GetSquareAt(ImVec2 pos);
+	class Node {
+		public:
+			ImVec2 pos;
+			int generation;
+			Node *parent;  // Stored in grid
+			double distance;
+			double score;
+
+			GridSquare type;
+
+			Node(ImVec2 pos);
+			double ComputeDistanceToEnd();
+			double ComputeScore();
+	};
+
+	void		UpdateWindow(bool *open);
+	void		SetSquareAtMouse(GridSquare type);
+	void		SetSquareAt(ImVec2 pos, GridSquare type);
+	Node*     	GetSquareAt(ImVec2 pos);
 	ImVec2		GetGridLocationUnderMouse();
-	void 		DrawGrid();
-	void 		DrawGrid(float size);
-	void 		DrawGrid(ImVec2 pos);
-	void 		DrawGrid(ImVec2 pos, float size);
-	void 		DrawGrid(ImVec2 pos, ImVec2 size);
-	void 		FillGrid(double rate);
+	void		DrawGrid();
+	void		DrawGrid(float size);
+	void		DrawGrid(ImVec2 pos);
+	void		DrawGrid(ImVec2 pos, float size);
+	void		DrawGrid(ImVec2 pos, ImVec2 size);
+	void		FillGrid(double rate);
 	void		ClearGrid();
 	size_t		ClearGridOf(GridSquare toClear);
 	bool		InvalidPos(ImVec2 pos);
+        bool            Comp(Node *left, double right);
 	// Actual algorithm functions
-	void 		Tick();
-	void 		CalculatePath(Node *from);
-	void		AddToConsider(Node toAdd);
+	void		Tick();
+	void		CalculatePath(Node *from);
+	void		AddToConsider(Node *toAdd, Node *parent);
 	void		Setup();
 	void		Stop();
 }
