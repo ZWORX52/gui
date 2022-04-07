@@ -66,8 +66,11 @@ namespace AStar {
 			Node *parent;  // Stored in grid
 			double distance;
 			double score;
+			// bool real_type;
 
 			GridSquare type;
+			// IDEA: (Temporary) visual-only type to show paths, maybe triggered with a flag (boolean) that says whether to show real type?
+			// GridSquare virtual_type
 
 			Node(ImVec2 pos);
 			double ComputeDistanceToEnd();
@@ -75,9 +78,10 @@ namespace AStar {
 	};
 
 	void		UpdateWindow(bool *open);
+	void		ShowKeybinds();
 	void		SetSquareAtMouse(GridSquare type);
 	void		SetSquareAt(ImVec2 pos, GridSquare type);
-	Node*     	GetSquareAt(ImVec2 pos);
+	Node*		GetSquareAt(ImVec2 pos);
 	ImVec2		GetGridLocationUnderMouse();
 	void		DrawGrid();
 	void		DrawGrid(float size);
@@ -88,7 +92,7 @@ namespace AStar {
 	void		ClearGrid();
 	size_t		ClearGridOf(GridSquare toClear);
 	bool		InvalidPos(ImVec2 pos);
-        bool            Comp(Node *left, double right);
+	bool		Comp(Node *left, double right);
 	// Actual algorithm functions
 	void		Tick();
 	void		CalculatePath(Node *from);
