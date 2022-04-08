@@ -46,7 +46,7 @@ namespace WordleEncryption {
 
 namespace Utils {
         void ClearBuffer(char buf[]);
-        void SeedCSPRNG();
+        void SeedPRNG();
         double Random();
         bool Equal(ImVec2 a, ImVec2 b);
         ImVec2 v_abs(ImVec2 __val);

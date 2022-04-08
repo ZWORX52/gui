@@ -14,8 +14,7 @@ bool acquire_context(HCRYPTPROV* ctx) {
 }
 
 
-size_t sysrandom(void* dst, size_t dstlen)
-{
+size_t sysrandom(void* dst, size_t dstlen) {
     HCRYPTPROV ctx;
     if (!acquire_context(&ctx)) {
         throw std::runtime_error("Unable to initialize Win32 crypt library.");
@@ -42,7 +41,7 @@ size_t sysrandom(void* dst, size_t dstlen) {
 }
 #endif
 
-void Utils::SeedCSPRNG() {
+void Utils::SeedPRNG() {
         std::uint_least32_t seed;
         sysrandom(&seed, sizeof(seed));
         gen = std::mt19937(seed);
@@ -56,10 +55,10 @@ void Utils::ClearBuffer(char buf[]) {
 }
 
 double Utils::Random() {
-        // Call upon our friend the CSPRNG (cryptographically-secure pseudo-random number generator)
+        // Call upon our good friend the PRNG (pseudo-random number generator)
         // with a lot of code yoinked from StackOverflow.
         if (!seeded)
-                SeedCSPRNG();
+                SeedPRNG();
 #undef max
         return static_cast<double>(gen()) / static_cast<double>(gen.max());
 }

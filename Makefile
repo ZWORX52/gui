@@ -54,7 +54,7 @@ run:
 test: imgui
 	@if ./main; then make lint; else make debug; fi
 
-lint: imgui
+lint:
 	cpplint $(CPPLINT_FLAGS) $(MY_SOURCES)
 
 debug: imgui
