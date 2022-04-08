@@ -6,8 +6,8 @@
 EXE = main
 OBJDIR = objdir/
 IMGUI_DIR = ../imgui
-MY_SOURCES = main.cpp encrypt.cpp utils.cpp origins.cpp astar.cpp
-SOURCES = $(MY_SOURCES)
+CPPLINT_SOURCES = main.cpp encrypt.cpp utils.cpp origins.cpp astar.cpp main.hpp origins.hpp
+SOURCES = main.cpp encrypt.cpp utils.cpp origins.cpp astar.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
 OBJS = $(addprefix $(OBJDIR), $(addsuffix .o, $(basename $(notdir $(SOURCES)))))
@@ -55,7 +55,9 @@ test: imgui
 	@if ./main; then make lint; else make debug; fi
 
 lint:
-	cpplint $(CPPLINT_FLAGS) $(MY_SOURCES)
+	cpplint $(CPPLINT_FLAGS) $(CPPLINT_SOURCES)
+	@cpplint $(CPPLINT_FLAGS) --output=sed $(CPPLINT_SOURCES) > changes.sed
+	@echo Wrote changes to 'changes.sed'
 
 debug: imgui
 	valgrind ./main

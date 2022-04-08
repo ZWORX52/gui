@@ -4,3 +4,6 @@
 # Also the object files
 objdir/*
 
+# Don't forget style change files
+changes.sed
+
