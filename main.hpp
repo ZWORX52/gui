@@ -1,8 +1,17 @@
 // NOLINT(legal/copyright)
 #pragma once
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+#define WINDOWS
+#endif
+
+#ifdef WINDOWS
+#include <Windows.h>
+#include <wincrypt.h>
+#else
 #include <sys/syscall.h>
 #include <linux/random.h>
+#endif
 
 #include <GLFW/glfw3.h>  // Will drag system OpenGL headers
 
@@ -17,10 +26,11 @@
 #include <cmath>
 #include <list>
 
-#include "imgui/imgui.h"
-#include "imgui/backends/imgui_impl_glfw.h"
-#include "imgui/backends/imgui_impl_opengl3.h"
-#include "imgui/imgui_internal.h"
+#include "../imgui/imconfig.h"
+#include "../imgui/imgui.h"
+#include "../imgui/backends/imgui_impl_glfw.h"
+#include "../imgui/backends/imgui_impl_opengl3.h"
+#include "../imgui/imgui_internal.h"
 
 #define BUFFER_SIZE 1024
 
