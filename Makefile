@@ -46,7 +46,20 @@ $(OBJDIR)%.o:$(IMGUI_DIR)/%.cpp
 $(OBJDIR)%.o:$(IMGUI_DIR)/backends/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-all: imgui java
+all: buildable imgui java
+
+buildable:
+	@if [ -d ../imgui ]; \
+		then echo "Ready to build -- updating dear imgui!"; \
+			cd ../imgui; \
+			git pull; \
+			cd ../gui; \
+		else echo "Getting ready to build..."; \
+			cd ..; \
+			git clone https://github.com/ocornut/imgui; \
+			echo "Cloning done! Ready to build..."; \
+			cd gui; \
+		fi;
 
 run:
 	@c;make&&./main

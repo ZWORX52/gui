@@ -7,3 +7,6 @@ objdir/*
 # Don't forget style change files
 changes.sed
 
+# No using my bin!
+main
+
