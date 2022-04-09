@@ -1,6 +1,8 @@
 // NOLINT(legal/copyright)
 #pragma once
 
+#define IMGUI_USER_CONFIG "../gui/imgui_config.h"
+
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #define WINDOWS
 #endif
