@@ -6,8 +6,8 @@
 EXE = main
 OBJDIR = objdir/
 IMGUI_DIR = ../imgui
-CPPLINT_SOURCES = main.cpp encrypt.cpp utils.cpp origins.cpp astar.cpp main.hpp origins.hpp
-SOURCES = main.cpp encrypt.cpp utils.cpp origins.cpp astar.cpp
+CPPLINT_SOURCES = main.cpp encrypt.cpp utils.cpp origins.cpp astar.cpp main.hpp origins.hpp bf.cpp imgs.cpp
+SOURCES = main.cpp encrypt.cpp utils.cpp origins.cpp astar.cpp bf.cpp imgs.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
 OBJS = $(addprefix $(OBJDIR), $(addsuffix .o, $(basename $(notdir $(SOURCES)))))
@@ -15,7 +15,7 @@ UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
 
 CXXFLAGS = -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends
-CXXFLAGS += -g -Wall -Wextra -Wpedantic -Werror -Wformat 
+CXXFLAGS += -Wall -Wextra -Wpedantic -Werror -Wformat
 CPPLINT_FLAGS = --linelength=120
 LIBS = -lgmp
 
@@ -46,7 +46,7 @@ $(OBJDIR)%.o:$(IMGUI_DIR)/%.cpp
 $(OBJDIR)%.o:$(IMGUI_DIR)/backends/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-all: buildable imgui java
+all: buildable cls adddebugflaga imgui java
 
 buildable:
 	@if [ -d ../imgui ]; \
@@ -61,20 +61,28 @@ buildable:
 			cd gui; \
 		fi;
 
-run:
-	@c;make&&./main
+cls:
+	@clear
 
-test: imgui
-	@if ./main; then make lint; else make debug; fi
+remake: cls clean adddebugflaga imgui
 
-lint:
-	cpplint $(CPPLINT_FLAGS) $(CPPLINT_SOURCES)
-	@cpplint $(CPPLINT_FLAGS) --output=sed $(CPPLINT_SOURCES) > changes.sed
-	@echo Wrote changes to 'changes.sed'
+redebug: cls clean debug
 
-debug: imgui
-	valgrind ./main
-	gdb main
+rerelease: cls clean release
+
+debug: adddebugflaga adddebugflagb imgui
+
+release: addreleaseflag imgui
+
+adddebugflaga:
+	$(eval CXXFLAGS += -g)
+
+adddebugflagb:
+	$(eval CXXFLAGS += -Og)
+
+addreleaseflag:
+	$(eval CXXFLAGS += -Ofast)
+	@echo $(CXXFLAGS)
 
 imgui: $(EXE)
 	@echo Build complete for $(ECHO_MESSAGE)
@@ -82,12 +90,12 @@ imgui: $(EXE)
 $(EXE): $(OBJS)
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS)
 
-cleanf:
-	rm -f $(EXE) $(OBJS)
-
 clean:
 	rm -f $(OBJS)
 
 java:
 	@echo Will build java...
+
+lint:
+	cpplint $(CPPLINT_FLAGS) $(CPPLINT_SOURCES)
 

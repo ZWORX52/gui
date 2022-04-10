@@ -35,9 +35,11 @@ int main() {
         bool show_demo_window = false;
 
         bool show_wordle_encrypt = false;
-        bool show_wordle_encrypt_info_window = false;
+        // bool show_wordle_encrypt_info = false;
         bool show_origins = false;
         bool show_astar = false;
+        bool show_bf = false;
+        bool show_imgs = false;
 
         ImGuiWindowFlags flags = ImGuiWindowFlags_None;
         flags |= ImGuiWindowFlags_MenuBar;
@@ -61,10 +63,12 @@ int main() {
 
                 if (ImGui::BeginMenuBar()) {
                         if (ImGui::BeginMenu("About")) {
+                                /*
                                 if (ImGui::BeginMenu("Encryption")) {
                                         ImGui::MenuItem("Wordle info", NULL, &show_wordle_encrypt_info_window);
                                         ImGui::EndMenu();
                                 }
+                                */
                                 ImGui::EndMenu();
                         }
 
@@ -73,14 +77,15 @@ int main() {
                                 ImGui::EndMenu();
                         }
 
-                        if (ImGui::BeginMenu("Minecraft")) {
+                        if (ImGui::BeginMenu("Windows")) {
+                                ImGui::BeginDisabled();
                                 ImGui::MenuItem("Origins datapack generator", NULL, &show_origins);
-                                ImGui::EndMenu();
-                        }
-
-                        if (ImGui::BeginMenu("Algorithms")) {
+                                ImGui::EndDisabled();
                                 ImGui::MenuItem("A* (AStar)", NULL, &show_astar);
                                 ImGui::MenuItem("Wordle encryption", NULL, &show_wordle_encrypt);
+                                ImGui::MenuItem("Brain****", NULL, &show_bf);
+                                ImGui::MenuItem("Images", NULL, &show_imgs);
+
                                 ImGui::EndMenu();
                         }
 
@@ -89,9 +94,6 @@ int main() {
 
                 ImGui::Text("FPS: %f", ImGui::GetIO().Framerate);
 
-                if (show_demo_window && ImGui::Button("Close demo window"))
-                        show_demo_window = false;
-
                 if (ImGui::Button("Exit")) {
                         break;
                 }
@@ -99,15 +101,16 @@ int main() {
 
                 if (show_wordle_encrypt)
                         WordleEncryption::UpdateWindow(&show_wordle_encrypt);
-
                 if (show_demo_window)
-                        ImGui::ShowDemoWindow();
-
+                        ImGui::ShowDemoWindow(&show_demo_window);
                 if (show_origins)
                         Origins::UpdateWindow(&show_origins);
-
                 if (show_astar)
                         AStar::UpdateWindow(&show_astar);
+                if (show_bf)
+                        BF::UpdateWindow(&show_bf);
+                if (show_imgs)
+                        Images::UpdateWindow(&show_imgs);
 
                 // Display frame
                 ImGui::Render();

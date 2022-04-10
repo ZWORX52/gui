@@ -54,6 +54,12 @@ void Utils::ClearBuffer(char buf[]) {
         while (buf[c]) buf[c++] = '\0';
 }
 
+void Utils::ClearBuffer(unsigned char buf[]) {
+        // Resets buffer to '\0' until a null byte is encountered.
+        int c = 0;
+        while (buf[c]) buf[c++] = '\0';
+}
+
 double Utils::Random() {
         // Call upon our good friend the PRNG (pseudo-random number generator)
         // with a lot of code yoinked from StackOverflow.

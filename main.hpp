@@ -26,6 +26,7 @@
 #include <cctype>
 #include <cstdio>
 #include <cmath>
+#include <stack>
 #include <list>
 
 #include "../imgui/imgui.h"
@@ -33,21 +34,20 @@
 #include "../imgui/backends/imgui_impl_opengl3.h"
 #include "../imgui/imgui_internal.h"
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 2048
 
 // Function prototypes & namespaces
 namespace WordleEncryption {
         void UpdateWindow(bool *open);
-
         int EncryptFilter(ImGuiInputTextCallbackData* data);
         void Encrypt(char in[], char out[]);
         void Decrypt(char in[], char out[]);
-
         void UpdateInfoWindow(bool *open);
 }
 
 namespace Utils {
         void ClearBuffer(char buf[]);
+        void ClearBuffer(unsigned char buf[]);
         void SeedPRNG();
         double Random();
         bool Equal(ImVec2 a, ImVec2 b);
@@ -113,5 +113,19 @@ void            CalculateTempPath(Node *from);
 void            AddToConsider(Node *toAdd, Node *parent);
 void            Setup();
 void            Stop();
-}  // namespace AStar
+};  // namespace AStar
+
+namespace BF {
+        void UpdateWindow(bool *open);
+        void Tick();
+        void Setup();
+        void Stop();
+};
+
+namespace Images {
+        void                            UpdateWindow(bool *open);
+        ImVec2                          GetCoordsAtMouse();
+        std::vector<bool>::reference    GetAt(ImVec2 pos);
+        void                            Display();
+};
 

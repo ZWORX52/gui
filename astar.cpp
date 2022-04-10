@@ -409,7 +409,7 @@ void AStar::UpdateWindow(bool *open) {
                         if (ImGui::Button("Reset height to 30"))
                                 grid_height = 30;
 
-                        ImGui::DragFloat("##rate", &rate, 0.01f, 0.0f, 1.0f, "%.2f");
+                        ImGui::DragFloat("##rate", &rate, 0.01f, 0.0f, 1.0f, "%.3f");
                         ImGui::SameLine();
                         if (ImGui::Button("Reset rate to 0.25"))
                                 rate = 0.25f;
