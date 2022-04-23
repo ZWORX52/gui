@@ -10,7 +10,7 @@ int main() {
         if (!glfwInit()) return 1;
 
         const char* glsl_version = "#version 130";
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
         GLFWwindow *window = glfwCreateWindow(1280, 720, "Program", NULL, NULL);
