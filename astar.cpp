@@ -148,7 +148,8 @@ void AStar::AddToConsider(AStar::Node *toAdd, AStar::Node *parent) {
         toAdd->type = GridSquare_ToConsider;
         double score = toAdd->ComputeScore();
         std::function<bool(Node*, double)> comp = AStar::Comp;
-        std::list<Node*>::const_iterator index = std::lower_bound(astar_toConsider.cbegin(), astar_toConsider.cend(), score, comp);
+        std::list<Node*>::const_iterator index = std::lower_bound(astar_toConsider.cbegin(),
+                                                                  astar_toConsider.cend(), score, comp);
         astar_toConsider.insert(index, toAdd);
 }
 
@@ -492,8 +493,10 @@ void AStar::UpdateWindow(bool *open) {
         astar_grid_pos = ImGui::GetCursorScreenPos();
         astar_mouse_pos = io.MousePos;
         ImVec2 under_mouse = GetGridLocationUnderMouse();
-        if (io.MousePos.x > astar_grid_pos.x && io.MousePos.x < astar_grid_pos.x + astar_grid_width * astar_grid_pixel_size &&
-                        io.MousePos.y > astar_grid_pos.y && io.MousePos.y < astar_grid_pos.y + astar_grid_height * astar_grid_pixel_size) {
+        if (io.MousePos.x > astar_grid_pos.x &&
+            io.MousePos.x < astar_grid_pos.x + astar_grid_width * astar_grid_pixel_size &&
+            io.MousePos.y > astar_grid_pos.y &&
+            io.MousePos.y < astar_grid_pos.y + astar_grid_height * astar_grid_pixel_size) {
                 if (ImGui::IsMouseDown(0)) {
                         // Left clicked
                         if (startsetting) {

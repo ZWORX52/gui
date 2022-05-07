@@ -119,7 +119,7 @@ namespace BF {
 class Log {
  public:
          ImGuiTextBuffer buf;
-         // TODO: add filter
+         // TODO(ZWORX52): add filter
 };
 enum LogType {
         LogType_Update,                 // For informing user on updates on program run state
@@ -141,4 +141,3 @@ namespace Images {
         std::vector<bool>::reference    GetAt(ImVec2 pos);
         void                            Display();
 };
-

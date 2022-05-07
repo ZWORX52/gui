@@ -6,7 +6,7 @@
 EXE = main
 OBJDIR = objdir/
 IMGUI_DIR = ../imgui
-CPPLINT_SOURCES = main.cpp encrypt.cpp utils.cpp origins.cpp astar.cpp main.hpp astar.hpp origins.hpp bf.cpp imgs.cpp
+CPPLINT_SOURCES = main.cpp encrypt.cpp utils.cpp origins.cpp astar.cpp main.hpp origins.hpp bf.cpp imgs.cpp
 SOURCES = main.cpp encrypt.cpp utils.cpp origins.cpp astar.cpp bf.cpp imgs.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp

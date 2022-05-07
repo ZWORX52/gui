@@ -119,7 +119,7 @@ void BF::UpdateWindow(bool *open) {
                         if (BF::Tick()) {
                                 // If there was an error (currently only if bf_input ran out)
                                 // Stop running the program and inform the user.
-                                // TODO: Log
+                                // TODO(ZWORX52): Log
                         }
                         bf_prgm_p++;
                 }
