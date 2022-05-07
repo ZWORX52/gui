@@ -76,8 +76,8 @@ class Node {
         ImVec2 pos;
         int generation;
         Node *parent;  // Stored in grid
-        double distance;
-        double score;
+        double stored_distance;
+        double stored_score;
         // bool real_type;
 
         GridSquare type;
@@ -85,7 +85,7 @@ class Node {
         // (boolean) that says whether to show real type?
         GridSquare virtual_type;
 
-        explicit Node(ImVec2 pos);
+        explicit Node(ImVec2 new_pos);  // Casting from an ImVec2... No. Don't do it. Why would you?
         double ComputeDistanceToEnd();
         double ComputeScore();
 };
@@ -116,11 +116,24 @@ void            Stop();
 };  // namespace AStar
 
 namespace BF {
-        void UpdateWindow(bool *open);
-        void Tick();
-        void Setup();
-        void Stop();
+class Log {
+ public:
+         ImGuiTextBuffer buf;
+         // TODO: add filter
 };
+enum LogType {
+        LogType_Update,                 // For informing user on updates on program run state
+        LogType_Note,                   // For giving no-severity comments/notes to the user
+        LogType_Warn,                   // For telling the user: "this CAN be here, but shouldn't really"
+        LogType_Error                   // For telling the user, bluntly: "This can't be here. Deal with it."
+};
+
+void UpdateWindow(bool *open);
+int Tick();
+void Setup();
+void Stop();
+int Verify();
+};  // namespace BF
 
 namespace Images {
         void                            UpdateWindow(bool *open);

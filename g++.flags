@@ -1,0 +1,12 @@
+-Wall
+-Wextra
+-Werror
+-Wformat=2
+-Wundef
+-Wshadow
+-Wpointer-arith
+-Wcast-align
+-Wstrict-overflow
+-Wcast-align=strict
+-Wlogical-op
+

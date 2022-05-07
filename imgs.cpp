@@ -1,5 +1,7 @@
 // NOLINT(legal/copyright)
 #include "./main.hpp"
+// Please don't use this
+// This is a mess. :(
 
 // Might eventually make this into a vector of chars or something.
 // Would need to change the encoding. MAYBE vec<vec<char>> later?
@@ -23,8 +25,9 @@ void Images::Display() {
         for (size_t i = 0; i < image.size(); i++) {
                 for (size_t j = 0; j < image[i].size(); j++) {
                         ImVec2 square_start = images_grid_pos + ImVec2(images_grid_size.x * j, images_grid_size.y * i);
-                        draw_list->AddRectFilled(square_start, square_start + images_disp_size, 
-                                        image[i][j] ? ImColor(ImVec4(0.0f, 0.0f, 0.0f, 1.0f)) : ImColor(ImVec4(1.0f, 1.0f, 1.0f, 1.0f)));
+                        draw_list->AddRectFilled(square_start, square_start + images_disp_size,
+                                        image[i][j] ? ImColor(ImVec4(0.0f, 0.0f, 0.0f, 1.0f)) :
+                                        ImColor(ImVec4(1.0f, 1.0f, 1.0f, 1.0f)));
                 }
         }
         ImGui::SetCursorScreenPos(ImVec2(images_grid_pos.x, images_grid_pos.y + image.size() * images_disp_size.y + 4));
@@ -33,7 +36,7 @@ void Images::Display() {
 void Images::UpdateWindow(bool *open) {
         ImGuiWindowFlags flags = ImGuiWindowFlags_None;
         flags |= ImGuiWindowFlags_AlwaysAutoResize;
-        
+
         ImGuiIO &io = ImGui::GetIO();
 
         ImGui::Begin("Images", open, flags);

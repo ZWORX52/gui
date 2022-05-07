@@ -1,3 +1,21 @@
 {
-        "cmake.configureOnOpen": false
+        "cmake.configureOnOpen": false,
+        "C_Cpp.errorSquiggles": "Disabled",
+        "files.associations": {
+                "*.tcc": "cpp",
+                "algorithm": "cpp",
+                "memory": "cpp",
+                "random": "cpp",
+                "fstream": "cpp",
+                "iosfwd": "cpp",
+                "iostream": "cpp",
+                "istream": "cpp",
+                "numeric": "cpp",
+                "ostream": "cpp",
+                "streambuf": "cpp",
+                "memory_resource": "cpp",
+                "new": "cpp",
+                "utility": "cpp",
+                "functional": "cpp"
+        }
 }

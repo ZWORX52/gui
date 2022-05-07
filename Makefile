@@ -6,7 +6,7 @@
 EXE = main
 OBJDIR = objdir/
 IMGUI_DIR = ../imgui
-CPPLINT_SOURCES = main.cpp encrypt.cpp utils.cpp origins.cpp astar.cpp main.hpp origins.hpp bf.cpp imgs.cpp
+CPPLINT_SOURCES = main.cpp encrypt.cpp utils.cpp origins.cpp astar.cpp main.hpp astar.hpp origins.hpp bf.cpp imgs.cpp
 SOURCES = main.cpp encrypt.cpp utils.cpp origins.cpp astar.cpp bf.cpp imgs.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
@@ -15,7 +15,8 @@ UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
 
 CXXFLAGS = -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends
-CXXFLAGS += -Wall -Wextra -Wpedantic -Werror -Wformat
+# Maybe figure out adding -Wfloat-equal later, but dear imgui source code warns on it so...
+CXXFLAGS += @g++.flags
 CPPLINT_FLAGS = --linelength=120
 LIBS = -lgmp
 

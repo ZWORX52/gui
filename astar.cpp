@@ -2,10 +2,7 @@
 #include "./main.hpp"
 
 std::vector<std::vector<AStar::Node>> grid;
-
 std::list<AStar::Node*> toConsider;
-// std::vector<AStar::Node*> considered;
-// Not needed as nodes are stored in the grid.
 
 ImVec4 col_none;
 ImVec4 col_wall;
@@ -20,37 +17,35 @@ ImVec2 mouse_pos;
 ImVec2 end_pos;
 ImVec2 start_pos;
 
-int grid_size = 10;
+int grid_pixel_size = 10;
 int grid_width = 30;
 int grid_height = 30;
-bool running = false;
-bool paused = false;  // Necessary so we know not to call AStar::Setup() if we
+bool running = true;
+bool paused = true;  // Necessary so we know not to call AStar::Setup() if we
 // want to unpause because it messes up the toConsider & considered containers.
 unsigned path_length = 0;
 
-AStar::Node::Node(ImVec2 pos) {
-        // The gimmick is that the program fills
-        // the EXISTING nodes in on their extra data LATER.
-        this->pos = pos;
+AStar::Node::Node(ImVec2 new_pos) {
+        this->pos = new_pos;
         this->type = AStar::GridSquare_None;
         this->parent = NULL;
         this->generation = 0;
-        this->distance = 0;
-        this->score = 0;
+        this->stored_distance = 0;
+        this->stored_score = 0;
 }
 
 double AStar::Node::ComputeDistanceToEnd() {
         // End is global
         ImVec2 distance = Utils::v_abs(this->pos - end_pos);
         distance *= distance;
-        this->distance = sqrt(distance.x + distance.y);
-        return this->distance;
+        this->stored_distance = sqrt(distance.x + distance.y);
+        return this->stored_distance;
 }
 
 double AStar::Node::ComputeScore() {
         // Side effect. Computes score
-        this->score = ComputeDistanceToEnd() + this->generation;
-        return this->score;
+        this->stored_score = ComputeDistanceToEnd() + this->generation;
+        return this->stored_score;
 }
 
 void AStar::Setup() {
@@ -143,7 +138,7 @@ void AStar::CalculateTempPath(Node *from) {
 }
 
 bool AStar::Comp(AStar::Node *left, double right) {
-        return left->score < right;
+        return left->stored_score < right;
 }
 
 void AStar::AddToConsider(AStar::Node *toAdd, AStar::Node *parent) {
@@ -162,15 +157,15 @@ bool AStar::InvalidPos(ImVec2 pos)                      {
 }
 
 ImVec2 AStar::GetGridLocationUnderMouse() {
-        ImVec2 v = (mouse_pos - grid_pos) / grid_size;
+        ImVec2 v = (mouse_pos - grid_pos) / grid_pixel_size;
         return Utils::v_abs(ImVec2(static_cast<int>(v.x), static_cast<int>(v.y)));
 }
 
 AStar::Node *AStar::GetSquareAt(ImVec2 pos) { return &grid[pos.y][pos.x]; }
 void AStar::SetSquareAtMouse(AStar::GridSquare type) { AStar::SetSquareAt(AStar::GetGridLocationUnderMouse(), type); }
 void AStar::SetSquareAt(ImVec2 pos, AStar::GridSquare type) { grid[pos.y][pos.x].type = type; }
-void AStar::DrawGrid() { AStar::DrawGrid(grid_pos, ImVec2(grid_size, grid_size)); }
-void AStar::DrawGrid(ImVec2 pos) { AStar::DrawGrid(pos, ImVec2(grid_size, grid_size)); }
+void AStar::DrawGrid() { AStar::DrawGrid(grid_pos, ImVec2(grid_pixel_size, grid_pixel_size)); }
+void AStar::DrawGrid(ImVec2 pos) { AStar::DrawGrid(pos, ImVec2(grid_pixel_size, grid_pixel_size)); }
 void AStar::DrawGrid(float size) { AStar::DrawGrid(grid_pos, ImVec2(size, size)); }
 void AStar::DrawGrid(ImVec2 pos, float size) { AStar::DrawGrid(pos, ImVec2(size, size)); }
 
@@ -414,10 +409,10 @@ void AStar::UpdateWindow(bool *open) {
                         if (ImGui::Button("Reset rate to 0.25"))
                                 rate = 0.25f;
 
-                        ImGui::DragInt("##size", &grid_size, 1, 1, 20, "%i");
+                        ImGui::DragInt("##size", &grid_pixel_size, 1, 1, 20, "%i");
                         ImGui::SameLine();
                         if (ImGui::Button("Reset size to 10"))
-                                grid_size = 10;
+                                grid_pixel_size = 10;
 
                         ImGui::PopID();
 
@@ -497,8 +492,8 @@ void AStar::UpdateWindow(bool *open) {
         grid_pos = ImGui::GetCursorScreenPos();
         mouse_pos = io.MousePos;
         ImVec2 under_mouse = GetGridLocationUnderMouse();
-        if (io.MousePos.x > grid_pos.x && io.MousePos.x < grid_pos.x + grid_width * grid_size &&
-                        io.MousePos.y > grid_pos.y && io.MousePos.y < grid_pos.y + grid_height * grid_size) {
+        if (io.MousePos.x > grid_pos.x && io.MousePos.x < grid_pos.x + grid_width * grid_pixel_size &&
+                        io.MousePos.y > grid_pos.y && io.MousePos.y < grid_pos.y + grid_height * grid_pixel_size) {
                 if (ImGui::IsMouseDown(0)) {
                         // Left clicked
                         if (startsetting) {
@@ -529,7 +524,7 @@ void AStar::UpdateWindow(bool *open) {
                 if (sq_under_mouse->type == AStar::GridSquare_ToConsider ||
                                 sq_under_mouse->type == AStar::GridSquare_Considered)
                         ImGui::SetTooltip("distance: %f, gen: %u",
-                                        sq_under_mouse->distance, sq_under_mouse->generation);
+                                        sq_under_mouse->stored_distance, sq_under_mouse->generation);
         }
 
         AStar::DrawGrid();
