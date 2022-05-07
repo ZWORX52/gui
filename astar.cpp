@@ -1,29 +1,29 @@
 // NOLINT(legal/copyright)
 #include "./main.hpp"
 
-std::vector<std::vector<AStar::Node>> grid;
-std::list<AStar::Node*> toConsider;
+std::vector<std::vector<AStar::Node>> astar_grid;
+std::list<AStar::Node*> astar_toConsider;
 
-ImVec4 col_none;
-ImVec4 col_wall;
-ImVec4 col_start;
-ImVec4 col_end;
-ImVec4 col_path;
-ImVec4 col_considered;
-ImVec4 col_toConsider;
+ImVec4 astar_col_none;
+ImVec4 astar_col_wall;
+ImVec4 astar_col_start;
+ImVec4 astar_col_end;
+ImVec4 astar_col_path;
+ImVec4 astar_col_considered;
+ImVec4 astar_col_toConsider;
 
-ImVec2 grid_pos;
-ImVec2 mouse_pos;
-ImVec2 end_pos;
-ImVec2 start_pos;
+ImVec2 astar_grid_pos;
+ImVec2 astar_mouse_pos;
+ImVec2 astar_end_pos;
+ImVec2 astar_start_pos;
 
-int grid_pixel_size = 10;
-int grid_width = 30;
-int grid_height = 30;
-bool running = true;
-bool paused = true;  // Necessary so we know not to call AStar::Setup() if we
+int astar_grid_pixel_size = 10;
+int astar_grid_width = 30;
+int astar_grid_height = 30;
+bool astar_running = true;
+bool astar_paused = true;  // Necessary so we know not to call AStar::Setup() if we
 // want to unpause because it messes up the toConsider & considered containers.
-unsigned path_length = 0;
+unsigned astar_path_length = 0;
 
 AStar::Node::Node(ImVec2 new_pos) {
         this->pos = new_pos;
@@ -36,7 +36,7 @@ AStar::Node::Node(ImVec2 new_pos) {
 
 double AStar::Node::ComputeDistanceToEnd() {
         // End is global
-        ImVec2 distance = Utils::v_abs(this->pos - end_pos);
+        ImVec2 distance = Utils::v_abs(this->pos - astar_end_pos);
         distance *= distance;
         this->stored_distance = sqrt(distance.x + distance.y);
         return this->stored_distance;
@@ -50,39 +50,39 @@ double AStar::Node::ComputeScore() {
 
 void AStar::Setup() {
         // May need to do more things here
-        if (AStar::GetSquareAt(start_pos)->type != GridSquare_Start ||
-                        AStar::GetSquareAt(end_pos)->type != GridSquare_End)
+        if (AStar::GetSquareAt(astar_start_pos)->type != GridSquare_Start ||
+                        AStar::GetSquareAt(astar_end_pos)->type != GridSquare_End)
                 return;
-        running = true;
-        paused = false;
-        toConsider.push_back(AStar::GetSquareAt(start_pos));
-        path_length = 0;
+        astar_running = true;
+        astar_paused = false;
+        astar_toConsider.push_back(AStar::GetSquareAt(astar_start_pos));
+        astar_path_length = 0;
 }
 
 void AStar::Stop() {
         // Prepare for next session.
-        running = false;
-        paused = false;
-        toConsider.clear();
-        for (size_t i = 0; i < grid.size(); i++) {
-                for (size_t j = 0; j < grid[i].size(); j++) {
-                        grid[i][j].parent = NULL;
+        astar_running = false;
+        astar_paused = false;
+        astar_toConsider.clear();
+        for (size_t i = 0; i < astar_grid.size(); i++) {
+                for (size_t j = 0; j < astar_grid[i].size(); j++) {
+                        astar_grid[i][j].parent = NULL;
                 }
         }
 }
 
 void AStar::Tick() {
         // Manages everything necessary in one step of the astar algorithm
-        if (toConsider.size() == 0) {
+        if (astar_toConsider.size() == 0) {
                 // Nothing more to consider, therefore there is no path.
                 // IDEA: Highlight closest node to the end
                 // IDEA: (maybe with the path to that node?)
                 Stop();
                 return;
         }
-        Node *thisConsider = toConsider.front();
-        toConsider.erase(toConsider.begin());
-        if (Utils::Equal(thisConsider->pos, end_pos)) {
+        Node *thisConsider = astar_toConsider.front();
+        astar_toConsider.erase(astar_toConsider.begin());
+        if (Utils::Equal(thisConsider->pos, astar_end_pos)) {
                 AStar::CalculatePath(thisConsider);
                 AStar::Stop();
                 return;
@@ -113,8 +113,8 @@ void AStar::Tick() {
                 }
         }
         // Preservation
-        AStar::SetSquareAt(start_pos, GridSquare_Start);
-        AStar::SetSquareAt(end_pos, GridSquare_End);
+        AStar::SetSquareAt(astar_start_pos, GridSquare_Start);
+        AStar::SetSquareAt(astar_end_pos, GridSquare_End);
 }
 
 void AStar::CalculatePath(Node *from) {
@@ -122,7 +122,7 @@ void AStar::CalculatePath(Node *from) {
                 // The start node will have a NULL parent. Then, we stop.
                 if (from->type != AStar::GridSquare_Start && from->type != AStar::GridSquare_End) {
                         from->type = GridSquare_Path;
-                        path_length++;
+                        astar_path_length++;
                 }
                 from = from->parent;
         }
@@ -148,47 +148,47 @@ void AStar::AddToConsider(AStar::Node *toAdd, AStar::Node *parent) {
         toAdd->type = GridSquare_ToConsider;
         double score = toAdd->ComputeScore();
         std::function<bool(Node*, double)> comp = AStar::Comp;
-        std::list<Node*>::const_iterator index = std::lower_bound(toConsider.cbegin(), toConsider.cend(), score, comp);
-        toConsider.insert(index, toAdd);
+        std::list<Node*>::const_iterator index = std::lower_bound(astar_toConsider.cbegin(), astar_toConsider.cend(), score, comp);
+        astar_toConsider.insert(index, toAdd);
 }
 
 bool AStar::InvalidPos(ImVec2 pos)                      {
-        return pos.x < 0 || pos.x >= grid_width || pos.y < 0 || pos.y >= grid_height;
+        return pos.x < 0 || pos.x >= astar_grid_width || pos.y < 0 || pos.y >= astar_grid_height;
 }
 
 ImVec2 AStar::GetGridLocationUnderMouse() {
-        ImVec2 v = (mouse_pos - grid_pos) / grid_pixel_size;
+        ImVec2 v = (astar_mouse_pos - astar_grid_pos) / astar_grid_pixel_size;
         return Utils::v_abs(ImVec2(static_cast<int>(v.x), static_cast<int>(v.y)));
 }
 
-AStar::Node *AStar::GetSquareAt(ImVec2 pos) { return &grid[pos.y][pos.x]; }
+AStar::Node *AStar::GetSquareAt(ImVec2 pos) { return &astar_grid[pos.y][pos.x]; }
 void AStar::SetSquareAtMouse(AStar::GridSquare type) { AStar::SetSquareAt(AStar::GetGridLocationUnderMouse(), type); }
-void AStar::SetSquareAt(ImVec2 pos, AStar::GridSquare type) { grid[pos.y][pos.x].type = type; }
-void AStar::DrawGrid() { AStar::DrawGrid(grid_pos, ImVec2(grid_pixel_size, grid_pixel_size)); }
-void AStar::DrawGrid(ImVec2 pos) { AStar::DrawGrid(pos, ImVec2(grid_pixel_size, grid_pixel_size)); }
-void AStar::DrawGrid(float size) { AStar::DrawGrid(grid_pos, ImVec2(size, size)); }
+void AStar::SetSquareAt(ImVec2 pos, AStar::GridSquare type) { astar_grid[pos.y][pos.x].type = type; }
+void AStar::DrawGrid() { AStar::DrawGrid(astar_grid_pos, ImVec2(astar_grid_pixel_size, astar_grid_pixel_size)); }
+void AStar::DrawGrid(ImVec2 pos) { AStar::DrawGrid(pos, ImVec2(astar_grid_pixel_size, astar_grid_pixel_size)); }
+void AStar::DrawGrid(float size) { AStar::DrawGrid(astar_grid_pos, ImVec2(size, size)); }
 void AStar::DrawGrid(ImVec2 pos, float size) { AStar::DrawGrid(pos, ImVec2(size, size)); }
 
 void AStar::DrawGrid(ImVec2 pos, ImVec2 size) {
         // Draws the grid to the current window, with the top-left corner at `pos'
         static ImU32 this_col;
         ImDrawList *draw_list = ImGui::GetWindowDrawList();
-        for (size_t i = 0; i < grid.size(); i++) {
-                for (size_t j = 0; j < grid[i].size(); j++) {
-                        switch (grid[i][j].type) {
-                                case GridSquare_None:           this_col = ImColor(col_none);
+        for (size_t i = 0; i < astar_grid.size(); i++) {
+                for (size_t j = 0; j < astar_grid[i].size(); j++) {
+                        switch (astar_grid[i][j].type) {
+                                case GridSquare_None:           this_col = ImColor(astar_col_none);
                                                                 break;
-                                case GridSquare_Wall:           this_col = ImColor(col_wall);
+                                case GridSquare_Wall:           this_col = ImColor(astar_col_wall);
                                                                 break;
-                                case GridSquare_Start:          this_col = ImColor(col_start);
+                                case GridSquare_Start:          this_col = ImColor(astar_col_start);
                                                                 break;
-                                case GridSquare_End:            this_col = ImColor(col_end);
+                                case GridSquare_End:            this_col = ImColor(astar_col_end);
                                                                 break;
-                                case GridSquare_Path:           this_col = ImColor(col_path);
+                                case GridSquare_Path:           this_col = ImColor(astar_col_path);
                                                                 break;
-                                case GridSquare_Considered:     this_col = ImColor(col_considered);
+                                case GridSquare_Considered:     this_col = ImColor(astar_col_considered);
                                                                 break;
-                                case GridSquare_ToConsider:     this_col = ImColor(col_toConsider);
+                                case GridSquare_ToConsider:     this_col = ImColor(astar_col_toConsider);
                                                                 break;
                         }
                         // Actually draw the square ;)
@@ -196,34 +196,34 @@ void AStar::DrawGrid(ImVec2 pos, ImVec2 size) {
                         draw_list->AddRectFilled(square_start, square_start + size, this_col);
                 }
         }
-        ImGui::SetCursorScreenPos(ImVec2(pos.x, pos.y + grid.size() * size.y + 4));
+        ImGui::SetCursorScreenPos(ImVec2(pos.x, pos.y + astar_grid.size() * size.y + 4));
 }
 
 void AStar::FillGrid(double rate) {
-        for (size_t i = 0; i < grid.size(); i++) {
-                for (size_t j = 0; j < grid[i].size(); j++) {
+        for (size_t i = 0; i < astar_grid.size(); i++) {
+                for (size_t j = 0; j < astar_grid[i].size(); j++) {
                         if (Utils::Random() <= static_cast<double>(rate) &&
-                                        grid[i][j].type == AStar::GridSquare_None)
-                                grid[i][j].type = AStar::GridSquare_Wall;
+                                        astar_grid[i][j].type == AStar::GridSquare_None)
+                                astar_grid[i][j].type = AStar::GridSquare_Wall;
                 }
         }
 }
 
 void AStar::ClearGrid() {
-        for (size_t i = 0; i < grid.size(); i++) {
-                for (size_t j = 0; j < grid[i].size(); j++) {
-                        if (grid[i][j].type == AStar::GridSquare_Wall)
-                                grid[i][j].type = AStar::GridSquare_None;
+        for (size_t i = 0; i < astar_grid.size(); i++) {
+                for (size_t j = 0; j < astar_grid[i].size(); j++) {
+                        if (astar_grid[i][j].type == AStar::GridSquare_Wall)
+                                astar_grid[i][j].type = AStar::GridSquare_None;
                 }
         }
 }
 
 size_t AStar::ClearGridOf(GridSquare toClear) {
         size_t count = 0;  // If this isn't enough, I'm not writing `unsigned long long' everywhere lol
-        for (size_t i = 0; i < grid.size(); i++) {
-                for (size_t j = 0; j < grid[i].size(); j++) {
-                        if (grid[i][j].type == toClear) {
-                                grid[i][j].type = AStar::GridSquare_None;
+        for (size_t i = 0; i < astar_grid.size(); i++) {
+                for (size_t j = 0; j < astar_grid[i].size(); j++) {
+                        if (astar_grid[i][j].type == toClear) {
+                                astar_grid[i][j].type = AStar::GridSquare_None;
                                 count++;
                         }
                 }
@@ -268,7 +268,7 @@ void AStar::ShowKeybinds() {
         ImGui::Text("s: Start");
         ImGui::Text("f: Fill board");
         ImGui::Text("t: Tick (step)");
-        ImGui::Text("p: Pause (if running)");
+        ImGui::Text("p: Pause (if astar_running)");
         ImGui::Text("i: Initialize algorithm");
         ImGui::Text("q: Query (get info about tile)");
         ImGui::Text("d: Display path to tile");
@@ -298,13 +298,13 @@ void AStar::UpdateWindow(bool *open) {
         static bool exclusivemode = false;
         // static bool auto = false;  // TODO
 
-        col_none                = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);  // #000000FF Black
-        col_wall                = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);  // #FF0000FF Red
-        col_start               = ImVec4(1.0f, 0.0f, 1.0f, 1.0f);  // #FF00FFFF Purple
-        col_end                 = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);  // #FFFF00FF Yellow
-        col_path                = ImVec4(0.0f, 0.0f, 1.0f, 1.0f);  // #0000FFFF Blue
-        col_considered          = ImVec4(1.0f, 0.5f, 0.0f, 1.0f);  // #FF7800FF Orange
-        col_toConsider          = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);  // #00FF00FF Green
+        astar_col_none                = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);  // #000000FF Black
+        astar_col_wall                = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);  // #FF0000FF Red
+        astar_col_start               = ImVec4(1.0f, 0.0f, 1.0f, 1.0f);  // #FF00FFFF Purple
+        astar_col_end                 = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);  // #FFFF00FF Yellow
+        astar_col_path                = ImVec4(0.0f, 0.0f, 1.0f, 1.0f);  // #0000FFFF Blue
+        astar_col_considered          = ImVec4(1.0f, 0.5f, 0.0f, 1.0f);  // #FF7800FF Orange
+        astar_col_toConsider          = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);  // #00FF00FF Green
 
         ImGuiIO &io = ImGui::GetIO();
         if (ImGui::IsKeyPressed(ImGuiKey_E) && io.KeyShift)
@@ -338,11 +338,11 @@ void AStar::UpdateWindow(bool *open) {
         if (ImGui::IsKeyPressed(ImGuiKey_T))
                 AStar::Tick();
 
-        if (ImGui::IsKeyPressed(ImGuiKey_P) && running)
-                paused ^= 1;
+        if (ImGui::IsKeyPressed(ImGuiKey_P) && astar_running)
+                astar_paused ^= 1;
 
         if (ImGui::IsKeyPressed(ImGuiKey_I))
-        { AStar::Setup(); running = false; }
+        { AStar::Setup(); astar_running = false; }
 
         if (!exclusivemode) {
                 if (ImGui::TreeNode("Keybinds")) {
@@ -353,40 +353,40 @@ void AStar::UpdateWindow(bool *open) {
                 if (ImGui::TreeNode("Config")) {
                         ImGui::PushID("Colors");
 
-                        ImGui::ColorEdit4("##none", &col_none.x);
+                        ImGui::ColorEdit4("##none", &astar_col_none.x);
                         ImGui::SameLine();
                         if (ImGui::Button("Reset 'none' color"))
-                                col_none = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+                                astar_col_none = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 
-                        ImGui::ColorEdit4("##wall", &col_wall.x);
+                        ImGui::ColorEdit4("##wall", &astar_col_wall.x);
                         ImGui::SameLine();
                         if (ImGui::Button("Reset 'wall' color"))
-                                col_wall = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+                                astar_col_wall = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
 
-                        ImGui::ColorEdit4("##start", &col_start.x);
+                        ImGui::ColorEdit4("##start", &astar_col_start.x);
                         ImGui::SameLine();
                         if (ImGui::Button("Reset 'start' color"))
-                                col_start = ImVec4(1.0f, 0.0f, 1.0f, 1.0f);
+                                astar_col_start = ImVec4(1.0f, 0.0f, 1.0f, 1.0f);
 
-                        ImGui::ColorEdit4("##end", &col_end.x);
+                        ImGui::ColorEdit4("##end", &astar_col_end.x);
                         ImGui::SameLine();
                         if (ImGui::Button("Reset 'end' color"))
-                                col_end = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
+                                astar_col_end = ImVec4(1.0f, 1.0f, 0.0f, 1.0f);
 
-                        ImGui::ColorEdit4("##path", &col_path.x);
+                        ImGui::ColorEdit4("##path", &astar_col_path.x);
                         ImGui::SameLine();
                         if (ImGui::Button("Reset 'path' color"))
-                                col_path = ImVec4(0.0f, 0.0f, 1.0f, 1.0f);
+                                astar_col_path = ImVec4(0.0f, 0.0f, 1.0f, 1.0f);
 
-                        ImGui::ColorEdit4("##considered", &col_considered.x);
+                        ImGui::ColorEdit4("##considered", &astar_col_considered.x);
                         ImGui::SameLine();
                         if (ImGui::Button("Reset 'considered' color"))
-                                col_considered = ImVec4(1.0f, 0.5f, 0.0f, 1.0f);
+                                astar_col_considered = ImVec4(1.0f, 0.5f, 0.0f, 1.0f);
 
-                        ImGui::ColorEdit4("##toConsider", &col_toConsider.x);
+                        ImGui::ColorEdit4("##toConsider", &astar_col_toConsider.x);
                         ImGui::SameLine();
                         if (ImGui::Button("Reset 'toConsider' color"))
-                                col_toConsider = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
+                                astar_col_toConsider = ImVec4(0.0f, 1.0f, 0.0f, 1.0f);
 
                         ImGui::PopID();
 
@@ -394,25 +394,25 @@ void AStar::UpdateWindow(bool *open) {
 
                         // Yes, you need to specify that the rate of an int is 1.
                         // No, I don't understand why there isn't an overload without the rate.
-                        ImGui::DragInt("##width", &grid_width, 1, 1, 100, "%i");
+                        ImGui::DragInt("##width", &astar_grid_width, 1, 1, 100, "%i");
                         ImGui::SameLine();
                         if (ImGui::Button("Reset width to 30"))
-                                grid_width = 30;
+                                astar_grid_width = 30;
 
-                        ImGui::DragInt("##height", &grid_height, 1, 1, 100, "%i");
+                        ImGui::DragInt("##height", &astar_grid_height, 1, 1, 100, "%i");
                         ImGui::SameLine();
                         if (ImGui::Button("Reset height to 30"))
-                                grid_height = 30;
+                                astar_grid_height = 30;
 
                         ImGui::DragFloat("##rate", &rate, 0.01f, 0.0f, 1.0f, "%.3f");
                         ImGui::SameLine();
                         if (ImGui::Button("Reset rate to 0.25"))
                                 rate = 0.25f;
 
-                        ImGui::DragInt("##size", &grid_pixel_size, 1, 1, 20, "%i");
+                        ImGui::DragInt("##size", &astar_grid_pixel_size, 1, 1, 20, "%i");
                         ImGui::SameLine();
                         if (ImGui::Button("Reset size to 10"))
-                                grid_pixel_size = 10;
+                                astar_grid_pixel_size = 10;
 
                         ImGui::PopID();
 
@@ -425,11 +425,11 @@ void AStar::UpdateWindow(bool *open) {
                 if (ImGui::Button("Clear grid"))
                         ClearGridOf(GridSquare_Wall);
                 ImGui::SameLine();
-                if (running) {
-                        if (!paused && ImGui::Button("Pause"))
-                                paused = true;
-                        if (paused && ImGui::Button("Resume"))
-                                paused = false;
+                if (astar_running) {
+                        if (!astar_paused && ImGui::Button("Pause"))
+                                astar_paused = true;
+                        if (astar_paused && ImGui::Button("Resume"))
+                                astar_paused = false;
                         AStar::Tick();
                 } else {
                         if (ImGui::Button("Start"))
@@ -451,17 +451,17 @@ void AStar::UpdateWindow(bool *open) {
                 ImGui::EndPopup();
         }
 
-        // Note: ImGui guarantees (enough for me at least) that grid_height won't ever be >100.
+        // Note: ImGui guarantees (enough for me at least) that astar_grid_height won't ever be >100.
         // I can add an assert or a check if really needed.
-        if (static_cast<size_t>(grid_height) != grid.size()) {
+        if (static_cast<size_t>(astar_grid_height) != astar_grid.size()) {
                 // Unfortunately I can't use .resize() here because we need a constructor for
                 // the new nodes (that takes their position).
-                if (static_cast<size_t>(grid_height) > grid.size()) {
+                if (static_cast<size_t>(astar_grid_height) > astar_grid.size()) {
                         std::vector<Node> tmp_vector;
-                        for (int i = 0; i < grid_width; i++) {
+                        for (int i = 0; i < astar_grid_width; i++) {
                                 tmp_vector.push_back(Node(ImVec2(i, 0)));
                         }
-                        for (int i = grid.size(); i < grid_height; i++) {
+                        for (int i = astar_grid.size(); i < astar_grid_height; i++) {
                                 // Starting at grid.size() is intentional, because we don't want to overwrite anything
                                 // that the user or program placed.  Then again, we don't really need the index: we just
                                 // need to loop the right amount of times.
@@ -469,38 +469,38 @@ void AStar::UpdateWindow(bool *open) {
                                         // Make sure to update the Y coordinate.
                                         tmp_vector[j].pos.y = i;
                                 }
-                                grid.push_back(tmp_vector);
+                                astar_grid.push_back(tmp_vector);
                         }
                 } else {
                         // Starting at the intended final height, so that we can remove that value
                         // (start-at-zero stuff ;) At least we have .erase() here!
-                        grid.erase(grid.begin() + grid_height, grid.end());
+                        astar_grid.erase(astar_grid.begin() + astar_grid_height, astar_grid.end());
                 }
         }
-        if (static_cast<size_t>(grid_width) != grid[0].size()) {
-                for (size_t i = 0; i < grid.size(); i++) {
-                        if (static_cast<size_t>(grid_width) > grid.size()) {
-                                for (int j = grid[i].size(); j < grid_width; j++) {
-                                        grid[i].push_back(Node(ImVec2(j, i)));
+        if (static_cast<size_t>(astar_grid_width) != astar_grid[0].size()) {
+                for (size_t i = 0; i < astar_grid.size(); i++) {
+                        if (static_cast<size_t>(astar_grid_width) > astar_grid.size()) {
+                                for (int j = astar_grid[i].size(); j < astar_grid_width; j++) {
+                                        astar_grid[i].push_back(Node(ImVec2(j, i)));
                                 }
                         } else {
-                                grid[i].erase(grid[i].cbegin() + grid_width, grid[i].cend());
+                                astar_grid[i].erase(astar_grid[i].cbegin() + astar_grid_width, astar_grid[i].cend());
                         }
                 }
         }
 
-        grid_pos = ImGui::GetCursorScreenPos();
-        mouse_pos = io.MousePos;
+        astar_grid_pos = ImGui::GetCursorScreenPos();
+        astar_mouse_pos = io.MousePos;
         ImVec2 under_mouse = GetGridLocationUnderMouse();
-        if (io.MousePos.x > grid_pos.x && io.MousePos.x < grid_pos.x + grid_width * grid_pixel_size &&
-                        io.MousePos.y > grid_pos.y && io.MousePos.y < grid_pos.y + grid_height * grid_pixel_size) {
+        if (io.MousePos.x > astar_grid_pos.x && io.MousePos.x < astar_grid_pos.x + astar_grid_width * astar_grid_pixel_size &&
+                        io.MousePos.y > astar_grid_pos.y && io.MousePos.y < astar_grid_pos.y + astar_grid_height * astar_grid_pixel_size) {
                 if (ImGui::IsMouseDown(0)) {
                         // Left clicked
                         if (startsetting) {
                                 // Make sure there is only one start and end and update start_pos
                                 AStar::ClearGridOf(AStar::GridSquare_Start);
                                 AStar::SetSquareAtMouse(AStar::GridSquare_Start);
-                                start_pos = under_mouse;
+                                astar_start_pos = under_mouse;
                         } else {
                                 AStar::SetSquareAtMouse(AStar::GridSquare_Wall);
                         }
@@ -510,7 +510,7 @@ void AStar::UpdateWindow(bool *open) {
                                 // Make sure there is only one start and end and update start_pos
                                 AStar::ClearGridOf(AStar::GridSquare_End);
                                 AStar::SetSquareAtMouse(AStar::GridSquare_End);
-                                end_pos = under_mouse;
+                                astar_end_pos = under_mouse;
                         } else {
                                 AStar::SetSquareAtMouse(AStar::GridSquare_None);
                         }
@@ -520,7 +520,7 @@ void AStar::UpdateWindow(bool *open) {
         if (!AStar::InvalidPos(under_mouse) && ImGui::IsKeyDown(562)) {  // 562 = q
                 AStar::Node *sq_under_mouse = AStar::GetSquareAt(under_mouse);
                 if (sq_under_mouse->type == AStar::GridSquare_Path)
-                        ImGui::SetTooltip("length: %u", path_length);
+                        ImGui::SetTooltip("length: %u", astar_path_length);
                 if (sq_under_mouse->type == AStar::GridSquare_ToConsider ||
                                 sq_under_mouse->type == AStar::GridSquare_Considered)
                         ImGui::SetTooltip("distance: %f, gen: %u",
