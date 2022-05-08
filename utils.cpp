@@ -73,7 +73,7 @@ ImVec2 Utils::v_abs(ImVec2 __val) {
         return ImVec2(abs(__val.x), abs(__val.y));
 }
 
-bool Utils::Equal(ImVec2 a, ImVec2 b) {
+bool Utils::v_eq(ImVec2 a, ImVec2 b) {
         return a.x == b.x && a.y == b.y;
 }
 

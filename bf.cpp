@@ -1,6 +1,8 @@
 // NOLINT(legal/copyright)
 #include "./main.hpp"
 
+// TODO: support null characters in the output
+
 #define MEM_SIZE 30000
 
 std::stack<char*> loop_starts;
@@ -84,7 +86,7 @@ int BF::Tick() {
                 case '[' :  // slow down there we should skip the loop if *bf_p = 0
                            if (!*bf_p)
                                    bf_prgm_p = strchr(bf_prgm_p, ']');  // WE CAN ASSUME THERE WILL BE AN END BRACKET!!!
-                           loop_starts.push(bf_prgm_p - 1);
+                           loop_starts.push(bf_prgm_p - 1);  // (maybe, if I get the verifier working)
                            break;
                 case ']' : if (loop_starts.empty()) {
                                    break;

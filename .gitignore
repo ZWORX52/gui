@@ -3,6 +3,7 @@
 
 # Also the object files
 objdir/*
+objdir
 
 # Don't forget style change files
 changes.sed

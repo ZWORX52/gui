@@ -7,7 +7,9 @@ EXE = main
 OBJDIR = objdir/
 IMGUI_DIR = ../imgui
 CPPLINT_SOURCES = main.cpp encrypt.cpp utils.cpp origins.cpp astar.cpp main.hpp origins.hpp bf.cpp imgs.cpp
-SOURCES = main.cpp encrypt.cpp utils.cpp origins.cpp astar.cpp bf.cpp imgs.cpp
+MY_SOURCES = main.cpp encrypt.cpp utils.cpp origins.cpp astar.cpp bf.cpp imgs.cpp
+MY_OBJS = $(addprefix $(OBJDIR), $(addsuffix .o, $(basename $(notdir $(MY_SOURCES)))))
+SOURCES = $(MY_SOURCES)
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
 OBJS = $(addprefix $(OBJDIR), $(addsuffix .o, $(basename $(notdir $(SOURCES)))))
@@ -15,7 +17,6 @@ UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
 
 CXXFLAGS = -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends
-# Maybe figure out adding -Wfloat-equal later, but dear imgui source code warns on it so...
 CXXFLAGS += @g++.flags
 CPPLINT_FLAGS = --linelength=120
 LIBS = -lgmp
@@ -71,6 +72,12 @@ redebug: cls clean debug
 
 rerelease: cls clean release
 
+sremake: cls sclean adddebugflaga imgui
+
+sredebug: cls sclean debug
+
+srerelease: cls sclean release
+
 debug: adddebugflaga adddebugflagb imgui
 
 release: addreleaseflag imgui
@@ -93,6 +100,9 @@ $(EXE): $(OBJS)
 
 clean:
 	rm -f $(OBJS)
+
+sclean:
+	rm -f $(MY_OBJS)
 
 java:
 	@echo Will build java...

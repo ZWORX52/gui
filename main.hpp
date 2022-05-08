@@ -43,22 +43,22 @@ namespace WordleEncryption {
         void Encrypt(char in[], char out[]);
         void Decrypt(char in[], char out[]);
         void UpdateInfoWindow(bool *open);
-}
+};  // namespace WordleEncryption
 
 namespace Utils {
         void ClearBuffer(char buf[]);
         void ClearBuffer(unsigned char buf[]);
         void SeedPRNG();
         double Random();
-        bool Equal(ImVec2 a, ImVec2 b);
         ImVec2 v_abs(ImVec2 __val);
-}
+        bool v_eq(ImVec2 __a, ImVec2 __b);
+};  // namespace Utils
 
 namespace Origins {
         void UpdateWindow(bool *open);
         void UpdateLoadWindow(bool *open);
         void UpdateEditWindow(bool *open);
-}
+};  // namespace Origins
 
 namespace AStar {
 enum GridSquare {
@@ -136,8 +136,13 @@ int Verify();
 };  // namespace BF
 
 namespace Images {
-        void                            UpdateWindow(bool *open);
-        ImVec2                          GetCoordsAtMouse();
-        std::vector<bool>::reference    GetAt(ImVec2 pos);
-        void                            Display();
-};
+void                            UpdateWindow(bool *open);
+ImVec2                          GetCoordsAtMouse();
+std::vector<bool>::reference    GetAt(ImVec2 pos);
+void                            Display();
+bool                            InvalidPos(ImVec2 coords);
+void                            Encode();
+void                            Encode(char *buf);
+void                            ClearImage();
+};  // namespace Images
+

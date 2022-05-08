@@ -1,6 +1,8 @@
 // NOLINT(legal/copyright)
 #include "./main.hpp"
 
+namespace AStar {
+
 std::vector<std::vector<AStar::Node>> astar_grid;
 std::list<AStar::Node*> astar_toConsider;
 
@@ -82,7 +84,7 @@ void AStar::Tick() {
         }
         Node *thisConsider = astar_toConsider.front();
         astar_toConsider.erase(astar_toConsider.begin());
-        if (Utils::Equal(thisConsider->pos, astar_end_pos)) {
+        if (Utils::v_eq(thisConsider->pos, astar_end_pos)) {
                 AStar::CalculatePath(thisConsider);
                 AStar::Stop();
                 return;
@@ -153,10 +155,6 @@ void AStar::AddToConsider(AStar::Node *toAdd, AStar::Node *parent) {
         astar_toConsider.insert(index, toAdd);
 }
 
-bool AStar::InvalidPos(ImVec2 pos)                      {
-        return pos.x < 0 || pos.x >= astar_grid_width || pos.y < 0 || pos.y >= astar_grid_height;
-}
-
 ImVec2 AStar::GetGridLocationUnderMouse() {
         ImVec2 v = (astar_mouse_pos - astar_grid_pos) / astar_grid_pixel_size;
         return Utils::v_abs(ImVec2(static_cast<int>(v.x), static_cast<int>(v.y)));
@@ -169,6 +167,8 @@ void AStar::DrawGrid() { AStar::DrawGrid(astar_grid_pos, ImVec2(astar_grid_pixel
 void AStar::DrawGrid(ImVec2 pos) { AStar::DrawGrid(pos, ImVec2(astar_grid_pixel_size, astar_grid_pixel_size)); }
 void AStar::DrawGrid(float size) { AStar::DrawGrid(astar_grid_pos, ImVec2(size, size)); }
 void AStar::DrawGrid(ImVec2 pos, float size) { AStar::DrawGrid(pos, ImVec2(size, size)); }
+bool AStar::InvalidPos(ImVec2 pos) { return
+        pos.x < 0 || pos.x >= astar_grid_width || pos.y < 0 || pos.y >= astar_grid_height; }
 
 void AStar::DrawGrid(ImVec2 pos, ImVec2 size) {
         // Draws the grid to the current window, with the top-left corner at `pos'
@@ -480,7 +480,7 @@ void AStar::UpdateWindow(bool *open) {
         }
         if (static_cast<size_t>(astar_grid_width) != astar_grid[0].size()) {
                 for (size_t i = 0; i < astar_grid.size(); i++) {
-                        if (static_cast<size_t>(astar_grid_width) > astar_grid.size()) {
+                        if (static_cast<size_t>(astar_grid_width) > astar_grid[i].size()) {  // Oops!
                                 for (int j = astar_grid[i].size(); j < astar_grid_width; j++) {
                                         astar_grid[i].push_back(Node(ImVec2(j, i)));
                                 }
@@ -538,4 +538,6 @@ void AStar::UpdateWindow(bool *open) {
         ImGui::PopStyleVar();
         ImGui::End();
 }
+
+};  // namespace AStar
 
