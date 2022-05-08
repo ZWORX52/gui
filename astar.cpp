@@ -1,8 +1,6 @@
 // NOLINT(legal/copyright)
 #include "./main.hpp"
 
-namespace AStar {
-
 std::vector<std::vector<AStar::Node>> astar_grid;
 std::list<AStar::Node*> astar_toConsider;
 
@@ -538,6 +536,4 @@ void AStar::UpdateWindow(bool *open) {
         ImGui::PopStyleVar();
         ImGui::End();
 }
-
-};  // namespace AStar
 
