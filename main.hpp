@@ -128,11 +128,11 @@ enum LogType {
         LogType_Error                   // For telling the user, bluntly: "This can't be here. Deal with it."
 };
 
-void UpdateWindow(bool *open);
-int Tick();
-void Setup();
-void Stop();
-int Verify();
+void                            UpdateWindow(bool *open);
+int                             Tick();
+void                            Setup();
+void                            Stop();
+int                             Verify();
 };  // namespace BF
 
 namespace Images {

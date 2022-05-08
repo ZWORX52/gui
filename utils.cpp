@@ -1,6 +1,8 @@
 // NOLINT(legal/copyright)
 #include "./main.hpp"
 
+namespace Utils {
+
 bool seeded = false;
 std::mt19937 gen;
 
@@ -41,26 +43,26 @@ size_t sysrandom(void* dst, size_t dstlen) {
 }
 #endif
 
-void Utils::SeedPRNG() {
+void SeedPRNG() {
         std::uint_least32_t seed;
         sysrandom(&seed, sizeof(seed));
         gen = std::mt19937(seed);
         seeded = true;
 }
 
-void Utils::ClearBuffer(char buf[]) {
+void ClearBuffer(char buf[]) {
         // Resets buffer to '\0' until a null byte is encountered.
         int c = 0;
         while (buf[c]) buf[c++] = '\0';
 }
 
-void Utils::ClearBuffer(unsigned char buf[]) {
+void ClearBuffer(unsigned char buf[]) {
         // Resets buffer to '\0' until a null byte is encountered.
         int c = 0;
         while (buf[c]) buf[c++] = '\0';
 }
 
-double Utils::Random() {
+double Random() {
         // Call upon our good friend the PRNG (pseudo-random number generator)
         // with a lot of code yoinked from StackOverflow.
         if (!seeded)
@@ -69,11 +71,12 @@ double Utils::Random() {
         return static_cast<double>(gen()) / static_cast<double>(gen.max());
 }
 
-ImVec2 Utils::v_abs(ImVec2 __val) {
+ImVec2 v_abs(ImVec2 __val) {
         return ImVec2(abs(__val.x), abs(__val.y));
 }
 
-bool Utils::v_eq(ImVec2 a, ImVec2 b) {
+bool v_eq(ImVec2 a, ImVec2 b) {
         return a.x == b.x && a.y == b.y;
 }
 
+}  // namespace Utils
