@@ -72,15 +72,21 @@ redebug: cls clean debug
 
 rerelease: cls clean release
 
+resmall: cls clean small
+
 sremake: cls sclean adddebugflaga imgui
 
 sredebug: cls sclean debug
 
 srerelease: cls sclean release
 
+sresmal: cls sclean small
+
 debug: adddebugflaga adddebugflagb imgui
 
 release: addreleaseflag imgui
+
+small: addsmallflag imgui
 
 adddebugflaga:
 	$(eval CXXFLAGS += -g)
@@ -89,8 +95,10 @@ adddebugflagb:
 	$(eval CXXFLAGS += -Og)
 
 addreleaseflag:
-	$(eval CXXFLAGS += -Ofast)
-	@echo $(CXXFLAGS)
+	$(eval CXXFLAGS += -Ofast -Wno-strict-overflow)
+
+addsmallflag:
+	$(eval CXXFLAGS += -Os)
 
 imgui: $(EXE)
 	@echo Build complete for $(ECHO_MESSAGE)

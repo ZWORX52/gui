@@ -156,8 +156,7 @@ void AddToConsider(Node *toAdd, Node *parent) {
 }
 
 ImVec2 GetGridLocationUnderMouse() {
-        ImVec2 v = (mouse_pos - grid_pos) / 
-grid_pixel_size;
+        ImVec2 v = (mouse_pos - grid_pos) / grid_pixel_size;
         return Utils::v_abs(ImVec2(static_cast<int>(v.x), static_cast<int>(v.y)));
 }
 
@@ -396,29 +395,25 @@ void UpdateWindow(bool *open) {
 
                         ImGui::PushID("Other configs");
 
-                        // Yes, you need to specify that the rate of an int is 1.
-                        // No, I don't understand why there isn't an overload without the rate.
-                        ImGui::DragInt("##width", &grid_width, 1, 1, 100, "%i");
+                        ImGui::SliderInt("##width", &grid_width, 1, 100);
                         ImGui::SameLine();
                         if (ImGui::Button("Reset width to 30"))
                                 grid_width = 30;
 
-                        ImGui::DragInt("##height", &grid_height, 1, 1, 100, "%i");
+                        ImGui::SliderInt("##height", &grid_height, 1, 100);
                         ImGui::SameLine();
                         if (ImGui::Button("Reset height to 30"))
                                 grid_height = 30;
+
+                        ImGui::SliderInt("##size", &grid_pixel_size, 1, 50);
+                        ImGui::SameLine();
+                        if (ImGui::Button("Reset size to 10"))
+                                grid_pixel_size = 10;
 
                         ImGui::DragFloat("##rate", &rate, 0.01f, 0.0f, 1.0f, "%.3f");
                         ImGui::SameLine();
                         if (ImGui::Button("Reset rate to 0.25"))
                                 rate = 0.25f;
-
-                        ImGui::DragInt("##size", &
-                grid_pixel_size, 1, 1, 20, "%i");
-                        ImGui::SameLine();
-                        if (ImGui::Button("Reset size to 10"))
-                                
-                        grid_pixel_size = 10;
 
                         ImGui::PopID();
 
@@ -499,11 +494,9 @@ void UpdateWindow(bool *open) {
         mouse_pos = io.MousePos;
         ImVec2 under_mouse = GetGridLocationUnderMouse();
         if (io.MousePos.x > grid_pos.x &&
-            io.MousePos.x < grid_pos.x + grid_width * 
-        grid_pixel_size &&
+            io.MousePos.x < grid_pos.x + grid_width * grid_pixel_size &&
             io.MousePos.y > grid_pos.y &&
-            io.MousePos.y < grid_pos.y + grid_height * 
-        grid_pixel_size) {
+            io.MousePos.y < grid_pos.y + grid_height * grid_pixel_size) {
                 if (ImGui::IsMouseDown(0)) {
                         // Left clicked
                         if (startsetting) {
@@ -527,7 +520,7 @@ void UpdateWindow(bool *open) {
                 }
         }
 
-        if (!InvalidPos(under_mouse) && ImGui::IsKeyDown(562)) {  // 562 = q
+        if (!InvalidPos(under_mouse) && ImGui::IsKeyDown(ImGuiKey_Q)) {  // 562 = q
                 Node *sq_under_mouse = GetSquareAt(under_mouse);
                 if (sq_under_mouse->type == GridSquare_Path)
                         ImGui::SetTooltip("length: %u", path_length);

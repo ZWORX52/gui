@@ -18,14 +18,13 @@
 #include <GLFW/glfw3.h>  // Will drag system OpenGL headers
 
 #include <functional>
+#include <iostream>
 #include <fstream>
-#include <cstring>
-#include <string>
+#include <cstdint>
+#include <bitset>
 #include <vector>
 #include <random>
 #include <cctype>
-#include <cstdio>
-#include <cmath>
 #include <stack>
 #include <list>
 
@@ -35,6 +34,7 @@
 #include "../imgui/imgui_internal.h"
 
 #define BUFFER_SIZE 2048
+#define LARGE_BUFFER_SIZE 32768
 
 // Function prototypes & namespaces
 namespace WordleEncryption {
@@ -142,7 +142,10 @@ std::vector<bool>::reference    GetAt(ImVec2 pos);
 void                            Display();
 bool                            InvalidPos(ImVec2 coords);
 void                            Encode();
-void                            Encode(char *buf);
+void                            Encode(char *dst);
 void                            ClearImage();
+void                            Decode();
+void                            Decode(char *src);
+void                            ResizeImage();
 };  // namespace Images
 

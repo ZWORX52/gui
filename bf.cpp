@@ -3,7 +3,7 @@
 
 namespace BF {
 
-// TODO: support null characters in the output
+// TODO(ZWORX52): support null characters in the output
 
 #define MEM_SIZE 30000
 
