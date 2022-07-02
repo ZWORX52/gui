@@ -21,6 +21,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdint>
+#include <cstdlib>
 #include <bitset>
 #include <vector>
 #include <random>
@@ -148,4 +149,53 @@ void                            Decode();
 void                            Decode(char *src);
 void                            ResizeImage();
 };  // namespace Images
+
+namespace Tetris {
+enum Block {
+        Block_I,
+        Block_J,
+        Block_L,
+        Block_O,
+        Block_S,
+        Block_T,
+        Block_Z,
+        Block_None
+};
+
+class Tetromino {
+ public:
+        Block Piece[4][4];
+        Block Type;
+        ImVec2 Pos;
+        int Rotation;
+
+        Tetromino(Block type, ImVec2 pos, int rotation);
+        void Display();
+        void Rotate();
+};
+
+class Board {
+ public:
+        std::vector<std::vector<Tetris::Block>> Matrix;
+        Tetris::Tetromino PlayTetromino;
+        // Tetris::Block HeldTetromino;
+        // std::vector<Tetris::Block> Bag;
+        ImVec2 Pos;
+        ImVec2 Block_Size;
+        ImVec4 col_None;
+        ImVec4 col_I;
+        ImVec4 col_J;
+        ImVec4 col_L;
+        ImVec4 col_O;
+        ImVec4 col_S;
+        ImVec4 col_T;
+        ImVec4 col_Z;
+
+        Board(ImVec2 size, ImVec2 pos, ImVec2 block_size);
+        void Draw();
+};
+
+void                            UpdateWindow(bool *open);
+void                            DrawGrid();
+};  // namespace Tetris
 

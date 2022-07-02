@@ -40,6 +40,7 @@ int main() {
         bool show_astar = false;
         bool show_bf = false;
         bool show_imgs = false;
+        bool show_tetris = false;
 
         ImGuiWindowFlags flags = ImGuiWindowFlags_None;
         flags |= ImGuiWindowFlags_MenuBar;
@@ -85,6 +86,7 @@ int main() {
                                 ImGui::MenuItem("Wordle encryption", NULL, &show_wordle_encrypt);
                                 ImGui::MenuItem("Brain****", NULL, &show_bf);
                                 ImGui::MenuItem("Images", NULL, &show_imgs);
+                                ImGui::MenuItem("Tetris", NULL, &show_tetris);
 
                                 ImGui::EndMenu();
                         }
@@ -111,6 +113,8 @@ int main() {
                         BF::UpdateWindow(&show_bf);
                 if (show_imgs)
                         Images::UpdateWindow(&show_imgs);
+                if (show_tetris)
+                        Tetris::UpdateWindow(&show_tetris);
 
                 // Display frame
                 ImGui::Render();

@@ -165,8 +165,7 @@ void SetSquareAtMouse(GridSquare type) { SetSquareAt(GetGridLocationUnderMouse()
 void SetSquareAt(ImVec2 pos, GridSquare type) { grid[pos.y][pos.x].type = type; }
 void DrawGrid() { DrawGrid(grid_pos, ImVec2(
 grid_pixel_size, grid_pixel_size)); }
-void DrawGrid(ImVec2 pos) { DrawGrid(pos, ImVec2(
-grid_pixel_size, grid_pixel_size)); }
+void DrawGrid(ImVec2 pos) { DrawGrid(pos, ImVec2(grid_pixel_size, grid_pixel_size)); }
 void DrawGrid(float size) { DrawGrid(grid_pos, ImVec2(size, size)); }
 void DrawGrid(ImVec2 pos, float size) { DrawGrid(pos, ImVec2(size, size)); }
 bool InvalidPos(ImVec2 pos) { return
@@ -292,14 +291,11 @@ void UpdateWindow(bool *open) {
         ImGui::Begin("AStar", open, flags);
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 4));
 
-        // Width and height of the grid
-        // static const int min = 1;
-        // static const int max = 100;
         static float rate = 0.25f;
 
         static bool startsetting = false;
         static bool exclusivemode = false;
-        // static bool auto = false;  // TODO
+        // static bool auto = false;  // TODO(ZWORX52)
 
         col_none                = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);  // #000000FF Black
         col_wall                = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);  // #FF0000FF Red
