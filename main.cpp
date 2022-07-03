@@ -96,6 +96,10 @@ int main() {
 
                 ImGui::Text("FPS: %f", ImGui::GetIO().Framerate);
 
+                ImGui::ColorEdit4("clear color", (float*)&clear_color.x);
+                // Print clear color
+                ImGui::Text("Clear color: (%.2f, %.2f, %.2f, %.2f)", clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+
                 if (ImGui::Button("Exit")) {
                         break;
                 }
