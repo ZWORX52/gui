@@ -1,193 +1,12 @@
 // NOLINT(legal/copyright)
-#include "./main.hpp"
+// #include "./main.hpp"
+#include "tetris/tetris.hpp"
+#include "tetris/impl.hpp"
 
 
 namespace Tetris {
 
-Block Block_States[7][4][4][4] = {
-{
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_I, Block_I, Block_I, Block_I},
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_None, Block_None, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_I, Block_None},
-                {Block_None, Block_None, Block_I, Block_None},
-                {Block_None, Block_None, Block_I, Block_None},
-                {Block_None, Block_None, Block_I, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_I, Block_I, Block_I, Block_I},
-                {Block_None, Block_None, Block_None, Block_None}
-        },
-        {
-                {Block_None, Block_I, Block_None, Block_None},
-                {Block_None, Block_I, Block_None, Block_None},
-                {Block_None, Block_I, Block_None, Block_None},
-                {Block_None, Block_I, Block_None, Block_None}
-        }
-},
-{
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_J, Block_None, Block_None, Block_None},
-                {Block_J, Block_J, Block_J, Block_None},
-                {Block_None, Block_None, Block_None, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_J, Block_J, Block_None},
-                {Block_None, Block_J, Block_None, Block_None},
-                {Block_None, Block_J, Block_None, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_J, Block_J, Block_J, Block_None},
-                {Block_None, Block_None, Block_J, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_J, Block_None, Block_None},
-                {Block_None, Block_J, Block_None, Block_None},
-                {Block_J, Block_J, Block_None, Block_None}
-        }
-},
-{
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_None, Block_L, Block_None},
-                {Block_L, Block_L, Block_L, Block_None},
-                {Block_None, Block_None, Block_None, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_L, Block_None, Block_None},
-                {Block_None, Block_L, Block_None, Block_None},
-                {Block_None, Block_L, Block_L, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_L, Block_L, Block_L, Block_None},
-                {Block_L, Block_None, Block_None, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_L, Block_L, Block_None, Block_None},
-                {Block_None, Block_L, Block_None, Block_None},
-                {Block_None, Block_L, Block_None, Block_None}
-        }
-},
-{
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_O, Block_O, Block_None},
-                {Block_None, Block_O, Block_O, Block_None},
-                {Block_None, Block_None, Block_None, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_O, Block_O, Block_None},
-                {Block_None, Block_O, Block_O, Block_None},
-                {Block_None, Block_None, Block_None, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_O, Block_O, Block_None},
-                {Block_None, Block_O, Block_O, Block_None},
-                {Block_None, Block_None, Block_None, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_O, Block_O, Block_None},
-                {Block_None, Block_O, Block_O, Block_None},
-                {Block_None, Block_None, Block_None, Block_None}
-        }
-},
-{
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_S, Block_S, Block_None},
-                {Block_S, Block_S, Block_None, Block_None},
-                {Block_None, Block_None, Block_None, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_S, Block_None, Block_None},
-                {Block_None, Block_S, Block_S, Block_None},
-                {Block_None, Block_None, Block_S, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_S, Block_S, Block_None},
-                {Block_S, Block_S, Block_None, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_S, Block_None, Block_None, Block_None},
-                {Block_S, Block_S, Block_None, Block_None},
-                {Block_None, Block_S, Block_None, Block_None}
-        }
-},
-{
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_T, Block_None, Block_None},
-                {Block_T, Block_T, Block_T, Block_None},
-                {Block_None, Block_None, Block_None, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_T, Block_None, Block_None},
-                {Block_None, Block_T, Block_T, Block_None},
-                {Block_None, Block_T, Block_None, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_T, Block_T, Block_T, Block_None},
-                {Block_None, Block_T, Block_None, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_T, Block_None, Block_None},
-                {Block_T, Block_T, Block_None, Block_None},
-                {Block_None, Block_T, Block_None, Block_None}
-        }
-},
-{
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_Z, Block_Z, Block_None, Block_None},
-                {Block_None, Block_Z, Block_Z, Block_None},
-                {Block_None, Block_None, Block_None, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_None, Block_Z, Block_None},
-                {Block_None, Block_Z, Block_Z, Block_None},
-                {Block_None, Block_Z, Block_None, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_Z, Block_Z, Block_None, Block_None},
-                {Block_None, Block_Z, Block_Z, Block_None}
-        },
-        {
-                {Block_None, Block_None, Block_None, Block_None},
-                {Block_None, Block_Z, Block_None, Block_None},
-                {Block_Z, Block_Z, Block_None, Block_None},
-                {Block_Z, Block_None, Block_None, Block_None}
-        }
-}
-};
+#include "tetris/block_states.hpp"
 
 Tetromino::Tetromino(Block type, ImVec2 pos, int rotation = 0) {
         this->Pos = pos;
@@ -515,6 +334,7 @@ void UpdateWindow(bool *open) {
         ImGui::PopStyleVar();
         ImGui::End();
 }
+
 
 };  // namespace Tetris
 

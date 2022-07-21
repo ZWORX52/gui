@@ -9,4 +9,5 @@
 -Wstrict-overflow
 -Wcast-align=strict
 -Wlogical-op
+-std=gnu++20
 
